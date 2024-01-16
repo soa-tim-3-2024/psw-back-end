@@ -369,3 +369,43 @@ VALUES (-34, 5, 'OK tour.', -3, '2023-10-10', '2023-12-26', -24, ARRAY ['https:/
 INSERT INTO payments."tourTokens"(
 	"Id", "TourId", "TouristId")
 	VALUES  (-1, 1001, -3);
+
+-- **************************** CLUBS ************************************
+
+INSERT INTO stakeholders."Clubs" ("Id", "OwnerId", "Name", "Description", "Image") 
+VALUES (-101, -179, 'Perspektivni planinari', 'Svi ljubitelji planinarenja su dobrodosli. ', 'https://cdn.discordapp.com/attachments/1159797397082357851/1196959230771613767/planinariklub.jpg?ex=65b98627&is=65a71127&hm=17cbb62675449625cce5c3e92cda0e72f9199c3a3985278942375bc23a2f111a&');
+INSERT INTO stakeholders."Clubs" ("Id", "OwnerId", "Name", "Description", "Image") 
+VALUES (-102, -183, 'Klub gladnih turista', 'Ako volite mnogo da putujete, a volite jos vise da jedete pridruzite nam se!', 'https://cdn.discordapp.com/attachments/1159797397082357851/1196958752994246776/burgerklub.jpg?ex=65b985b5&is=65a710b5&hm=34f4b93033021ff029a1066d657efa57934677f0d0cb46a77c07aa5aa1badc34&');
+INSERT INTO stakeholders."Clubs" ("Id", "OwnerId", "Name", "Description", "Image") 
+VALUES (-103, -181, 'Soping je zakon', 'Ako zelite drustvo za soping dobrodosli ste yass :)!', 'https://cdn.discordapp.com/attachments/1159797397082357851/1196959128430575677/mladenadeklub.jpg?ex=65b9860e&is=65a7110e&hm=ce60406a7f2774a1766a4111a178364223a2d09177cda16cedecca25b805c2f4&');
+INSERT INTO stakeholders."Clubs" ("Id", "OwnerId", "Name", "Description", "Image") 
+VALUES (-104, -3, 'Klub studenata', 'Svi studenti koji traze drustvo za putovanje su dobrodosli!', 'https://cdn.discordapp.com/attachments/1159797397082357851/1196958969659396146/studenttravel.jpg?ex=65b985e8&is=65a710e8&hm=9e7f7d7dd2fe36efaea69260d94a22f6a58007a4a0fd952a22fb00b32d047f3a&');
+
+-- **************************** CLUBS ************************************
+
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-101, -101, -183, '2024-01-16 23:17:00.202959');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-102, -102, -183, '2024-01-16 23:31:13.865434');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-103, -103, -183, '2024-01-16 23:33:32.274023');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-104, -104, -183, '2024-01-16 23:38:48.123009');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-105, -104, -179, '2024-01-16 23:39:59.017242');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-106, -104, -181, '2024-01-16 23:40:53.807638');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-107, -104, -13, '2024-01-16 23:42:07.208317');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-108, -104, -177, '2024-01-16 23:43:09.930107');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-109, -104, -178, '2024-01-16 23:43:21.857479');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-110, -102, -176, '2024-01-16 23:43:55.591621');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-111, -102, -183, '2024-01-16 23:44:10.910644');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-112, -103, -175, '2024-01-16 23:44:23.767499');
+INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
+VALUES (-113, -101, -181, '2024-01-16 23:45:04.268805');
