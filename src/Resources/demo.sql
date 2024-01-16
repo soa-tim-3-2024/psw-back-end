@@ -76,6 +76,7 @@ INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty"
 INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category") VALUES (-114, -2, 'Poseta pozoristima', 'Priblizite se novosadskoj pozorisnoj sceni', 2, '{pozoriste,predstava}', 1, 110, false, 0.66, '2024-01-16 21:01:47.964176+01', '-infinity', '[{"Duration": 41, "TransportType": 0}]', 3);
 INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category") VALUES (-115, -2, 'Obilazak crkvi', 'Upoznajte se sa religijskom stranom ovog grada', 3, '{religija,porodica,crkva}', 1, 30, false, 1.01, '2024-01-16 21:08:48.053856+01', '-infinity', '[{"Duration": 62, "TransportType": 0}]', 3);
 INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category") VALUES (1001, 1, 'Studentska tura', 'Put jednog studenta', 2, '{Dom,Student}', 0, 100, false, 0, '-infinity', '-infinity', '[]', 0);
+INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category") VALUES (-300, -2, 'Tura u Petrovaradinu', 'Obilazak znamenitosti u Petrovaradinu', 3, '{Arhitektura,Istorija}', 1, 240, false, 0.42, '2024-01-16 17:49:03.379089+00', '-infinity', '[{"Duration": 37, "TransportType": 0}]', 3);
 
 
 
@@ -130,6 +131,8 @@ INSERT INTO tours."KeyPoints" ("Id", "TourId", "Name", "Description", "Longitude
 INSERT INTO tours."KeyPoints" ("Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret", "IsEncounterRequired", "HasEncounter") VALUES (1001, 1001, 'Limanski dom', 'Prebivalište studenta', 19.837259978012302, 45.23600460780574, 'Bulevar despota Stefana  Liman 3  Novi Sad  21102  Serbia', '1b4e93c6-f510-4a0a-bf62-3703b9ae996d.jpg', 0, true, '{"Images": [""], "Description": ""}', false, false);
 INSERT INTO tours."KeyPoints" ("Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret", "IsEncounterRequired", "HasEncounter") VALUES (1002, 1001, 'Koliba', 'Najbolje mesto da se nesto prezalogaji', 19.848670095161655, 45.24889217996584, '10  Strazilovska  Novi Sad  21101  Serbia', '4b078975-8f12-432c-aa3b-475db3347ed9.jpg', 2, true, '{"Images": [""], "Description": ""}', false, false);
 INSERT INTO tours."KeyPoints" ("Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret", "IsEncounterRequired", "HasEncounter") VALUES (1003, 1001, 'FTN', 'Najvažnija ustanova za jednog studenta', 19.85106799002097, 45.245882067965155, 'University of Novi Sad  Доктора Симе Милошевића  Novi Sad  21101  Serbia', 'c7f0e951-b52e-492f-a2b7-c6e214f41ad9.jpg', 1, false, '{"Images": [""], "Description": "Razvijao sam struju, svetlom svet obasjao.\nU svome srcu nauku sam nosio.\nI dalje se pamte mog uma carolije.\nAmfiteatar A1, moje slavno ime krije."}', false, false);
+INSERT INTO tours."KeyPoints" ("Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret", "IsEncounterRequired", "HasEncounter") VALUES (-301, -300, 'Petrovaradinska tvrdjava', 'Setnja po Petrovaradinskoj tvrdjavi', 19.861720204353336, 45.25237482275976, 'Petrovaradin Fortress  Vladimira Nazora  Petrovaradin  21101  Serbia', '1ae23842-eda6-4a04-a6b2-2e02b7c7cec5.jpg', 0, true, '{"Images": [""], "Description": ""}', false, false);
+INSERT INTO tours."KeyPoints" ("Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret", "IsEncounterRequired", "HasEncounter") VALUES (-300, -300, 'Crkva Svetog Pavla', 'Setnja do crkve Svetog Pavla u starom gradu', 19.862776994705204, 45.25473129200542, 'Petrovaradin Fortress  Vladimira Nazora  Petrovaradin  21101  Serbia', 'b4777e0b-60f6-475b-bec4-b4c5affffca6.jpg', 1, true, '{"Images": [""], "Description": ""}', false, false);
 
 
 
@@ -308,59 +311,21 @@ INSERT INTO tours."TouristPositions" ("Id", "TouristId", "Longitude", "Latitude"
 
 
 
--- **************************** REVIEWS ************************************
+-- **************************** RATINGS ************************************
 
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-1, 5, 'Great and exciting tour.', -168, '2023-10-15', '2023-10-16', -1, ARRAY['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-2, 1, 'Not interesting at all.', -169, '2023-10-11', '2023-10-15', -2, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=','https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-3, 3, 'OK tour.', -168, '2023-10-10', '2023-10-16', -3, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-21, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-22, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-23, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-24, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-25, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-26, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-27, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-28, 5, 'OK tour.', -168, '2023-10-10', '2023-10-16', -21, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-29, 5, 'OK tour.', -168, '2023-10-10', '2023-12-26', -28, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-30, 4, 'OK tour.', -168, '2023-10-10', '2023-12-26', -27, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-31, 5, 'OK tour.', -168, '2023-10-10', '2023-12-26', -27, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-32, 5, 'OK tour.', -168, '2023-10-10', '2023-12-26', -24, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-33, 4, 'OK tour.', -168, '2023-10-10', '2023-12-26', -24, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
-INSERT INTO tours."Reviews"(
-    "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-34, 5, 'OK tour.', -3, '2023-10-10', '2023-12-26', -24, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-1, 5, 'Explorer je prekretnica za ljubitelje putovanja! Korisnički prijateljski interfejs i sveobuhvatne funkcije olakšavaju planiranje i snalaženje. Moj omiljeni aplikacija za svaku avanturu!', '2024-01-16 23:31:50.38076', -184);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-3, 3, 'Explorer je solidna putnička aplikacija, ali ima prostora za poboljšanja. Navigacija je prilično dobra, ali sam primetio da se ponekad sporo učitavaju informacije. Dodatno, neke od preporuka nisu baš najaktuelnije. Potrebno je raditi na bržem ažuriranju podataka kako bi korisnici imali tačne informacije tokom putovanja.', '2024-01-16 23:33:23.909465', -182);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-4, 5, 'Recenzije koje dolaze iz zajednice korisnika u Explorer-u pružaju dragocene informacije od drugih putnika. To je kao da se povežete sa globalnom mrežom istraživača i nikada me nije razočarao!', '2024-01-16 23:34:04.008897', -181);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-5, 4, 'Explorer je solidan pratilac putovanja, pružajući korisne funkcije za planiranje i istraživanje. Ima dobar interfejs, ali povremeno susrećem manje probleme sa brzinom ažuriranja. Sveukupno, zadovoljan sam iskustvom', '2024-01-16 23:35:06.780676', -180);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-8, 5, 'Pažnja na detaljima koju pruža Explorer ga čini posebnim. Od konvertora valuta do hitnih kontakata, obuhvata sve osnovne elemente za bezbrižno putovanje. Ne bih putovao bez njega', '2024-01-16 23:38:47.351147', -177);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-9, 4, 'Explorer je odličan pratilac putovanja s mnogo korisnih funkcija. Navigacija je intuitivna, a funkcionalnosti poput offline mapa su izuzetno korisne. Iako nije savršen, s nekim manjim ažuriranjima i dodacima mogao bi postati neprikosnoven.', '2024-01-16 23:40:44.779205', -176);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-10, 1, 'Explorer je potpuno nezadovoljavajuća putnička aplikacija. Iskusio sam neprestane probleme, od sporih ažuriranja do netačnih informacija. Korisničko iskustvo je frustrirajuće, podrška nikakva, i čini se da je svaki korak tokom putovanja s ovom aplikacijom izazov. Ocenjujem je sa 1 zvezdicom jer je neupotrebljiva i predstavlja više tereta nego pomoći.', '2024-01-16 23:41:24.950096', -175);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-12, 5, 'Explorer je apsolutno fantastičan! Ova aplikacija je sve što sam tražio u putničkom vodiču. Navigacija je besprekorna, informacije su tačne, a interfejs je vrlo intuitivan. Pored toga, dodatne funkcionalnosti poput offline mapa i personalizovanih preporuka čine je nezamenjivom za svakog putnika.', '2024-01-16 23:42:53.508957', -173);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-13, 5, 'Explorer je apsolutno izvanredan! Ova aplikacija je moj prvi izbor za svako putovanje. Od preciznih mapa do jednostavnog planiranja itinerera, sve je besprekorno. Dodatno, interaktivni vodiči i realne ocene drugih korisnika čine svako putovanje nezaboravnim. Explorer je jednostavno neprocenjiv saveznik, zaslužuje ocenu od 5 zvezdica i toplo preporučujem svima koji žele savršeno putničko iskustvo!', '2024-01-16 23:43:48.42878', -170);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-14, 5, 'Explorer je jednostavno izvanredan! Ova aplikacija je savršena kombinacija praktičnosti, preciznosti i intuitivnog dizajna. Navigacija je glatka, preporuke su tačne, a dodatne funkcionalnosti kao što su offline mape i personalizovani vodiči čine je pravim draguljem. Explorer je nezamenljiv za sve putnike koji žele maksimalno uživanje i sigurnost tokom putovanja.', '2024-01-16 23:46:07.003416', -169);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-15, 5, 'Explorer je bez premca! Ova aplikacija je neophodna za svakog putnika koji želi besprekorno iskustvo. Sve, od detaljnih mapa do praktičnih saveta i preporuka, radi besprekorno. Offline funkcionalnosti su spasile moje putovanje u područjima s lošim signalom. Ne mogu dovoljno istaći koliko je Explorer fantastičan – ocena od 5 zvezdica je više nego zaslužena!', '2024-01-16 23:46:31.944198', -168);
+INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserId") VALUES (-7, 4, 'Explorer je sasvim solidna putnička aplikacija s nekoliko prednosti i nedostataka. Navigacija je pristojna, ali sam primetio neke probleme s ažuriranjem informacija. Korisničko iskustvo je prosečno, moglo bi biti bolje. Zahteva poboljšanja kako bi se dostigla potpuna funkcionalnost i preciznost.', '2024-01-16 23:37:56.820404', -178);
+
 
 
 
