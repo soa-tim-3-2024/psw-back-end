@@ -361,7 +361,7 @@ VALUES (-105, -104, -179, '2024-01-16 23:39:59.017242');
 INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
 VALUES (-106, -104, -181, '2024-01-16 23:40:53.807638');
 INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
-VALUES (-107, -104, -13, '2024-01-16 23:42:07.208317');
+VALUES (-107, -104, -180, '2024-01-16 23:42:07.208317');
 INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
 VALUES (-108, -104, -177, '2024-01-16 23:43:09.930107');
 INSERT INTO stakeholders."ClubMemberships" ("Id", "ClubId", "TouristId", "TimeJoined") 
