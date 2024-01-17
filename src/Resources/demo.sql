@@ -101,7 +101,7 @@ VALUES (-114, -2, 'Poseta pozoristima', 'Priblizite se novosadskoj pozorisnoj sc
 INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category") 
 VALUES (-115, -2, 'Obilazak crkvi', 'Upoznajte se sa religijskom stranom ovog grada', 3, '{religija,porodica,crkva}', 1, 30, false, 1.01, '2024-01-16 21:08:48.053856+01', '-infinity', '[{"Duration": 62, "TransportType": 0}]', 3);
 INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category") 
-VALUES (1001, 1, 'Studentska tura', 'Put jednog studenta', 2, '{Dom,Student}', 1, 120, false, 2.55, '2024-01-16 21:08:48.053856+01', '-infinity', '[]', 0);
+VALUES (1001, 1, 'Studentska tura', 'Put jednog studenta', 2, '{Dom,Student}', 1, 120, false, 2.55, '2023-12-16 21:08:48.053856+01', '-infinity', '[]', 0);
 INSERT INTO tours."Tours" ("Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category") 
 VALUES (-300, -2, 'Tura u Petrovaradinu', 'Obilazak znamenitosti u Petrovaradinu', 3, '{Arhitektura,Istorija}', 1, 240, false, 0.42, '2024-01-16 17:49:03.379089+00', '-infinity', '[{"Duration": 37, "TransportType": 0}]', 3);
 
