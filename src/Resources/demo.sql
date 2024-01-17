@@ -346,13 +346,6 @@ INSERT INTO stakeholders."Ratings" ("Id", "Grade", "Comment", "DateTime", "UserI
 
 
 
-
--- **************************** TOUR TOKENS ************************************
-
-INSERT INTO payments."tourTokens"(
-	"Id", "TourId", "TouristId")
-	VALUES  (-1, 1001, -3);
-
 -- **************************** CLUBS ************************************
 
 INSERT INTO stakeholders."Clubs" ("Id", "OwnerId", "Name", "Description", "Image") 
