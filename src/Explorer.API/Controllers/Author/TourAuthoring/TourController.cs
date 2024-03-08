@@ -4,18 +4,23 @@ using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text;
+using System.Diagnostics;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
-    
-    [Route("api/tour")] 
+
+    [Route("api/tour")]
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
+        private readonly IHttpClientFactory _factory;
 
-        public TourController(ITourService tourService)
+        public TourController(ITourService tourService, IHttpClientFactory factory)
         {
             _tourService = tourService;
+            _factory = factory;
         }
 
         [Authorize(Roles = "author")]
@@ -36,25 +41,31 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("authors")]
-        public ActionResult<PagedResult<TourResponseDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<List<TourResponseDto>>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
         {
+            var client = _factory.CreateClient();
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
-            var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
-            return CreateResponse(result);
+            /*var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
+            return CreateResponse(result);*/
+            var tours = await GetAuthorsToursGo(client, id);
+            return tours;
         }
 
         [Authorize(Roles = "author, tourist")]
         [HttpPost]
-        public ActionResult<TourResponseDto> Create([FromBody] TourCreateDto tour)
+        public async Task<ActionResult<TourResponseDto>> Create([FromBody] TourCreateDto tour)
         {
+            var client = _factory.CreateClient();
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
-            var result = _tourService.Create(tour);
-            return CreateResponse(result);
+            /*var result = _tourService.Create(tour);
+            return CreateResponse(result);*/
+            var tourResponse = await CreateTourGo(client, tour);
+            return tourResponse;
         }
 
         [Authorize(Roles = "author, tourist")]
@@ -170,5 +181,29 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var result = _tourService.GetToursBasedOnSelectedKeyPoints(page, pageSize, keyPointIdsList, authorId);
             return CreateResponse(result);
         }
+        static async Task<TourResponseDto> CreateTourGo(HttpClient httpClient, TourCreateDto tour)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(tour),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PostAsync(
+                "http://localhost:8081/tours",
+                jsonContent);
+            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+            var tourResponse = await response.Content.ReadFromJsonAsync<TourResponseDto>();
+            return tourResponse;
+        }
+        static async Task<List<TourResponseDto>> GetAuthorsToursGo(HttpClient httpClient, long authorId)
+        {
+            var tours = await httpClient.GetFromJsonAsync<List<TourResponseDto>>(
+                "http://localhost:8081/tours/" + authorId);
+            return tours;
+
+        }
     }
+
+
 }

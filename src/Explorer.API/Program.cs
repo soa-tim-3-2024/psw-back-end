@@ -9,7 +9,7 @@ builder.Services.ConfigureSwagger(builder.Configuration);
 const string corsPolicy = "_corsPolicy";
 builder.Services.ConfigureCors(corsPolicy);
 builder.Services.ConfigureAuth();
-
+builder.Services.AddHttpClient();
 builder.Services.RegisterModules();
 
 var app = builder.Build();
