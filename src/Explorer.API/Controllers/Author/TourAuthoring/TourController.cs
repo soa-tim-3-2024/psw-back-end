@@ -70,15 +70,19 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpPut("{id:int}")]
-        public ActionResult<TourResponseDto> Update([FromBody] TourUpdateDto tour)
+        public async Task<ActionResult<TourResponseDto>> Update([FromBody] TourUpdateDto tour)
         {
+            var client = _factory.CreateClient();
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
-            var result = _tourService.Update(tour);
+            /*var result = _tourService.Update(tour);
             return CreateResponse(result);
+            */
+            var tourResponse = await UpdateTourGo(client, tour);
+            return tourResponse;
         }
 
         [Authorize(Roles = "author, tourist")]
@@ -202,6 +206,21 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 "http://localhost:8081/tours/" + authorId);
             return tours;
 
+        }
+        static async Task<TourResponseDto> UpdateTourGo(HttpClient httpClient, TourUpdateDto tour)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(tour),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PutAsync(
+                "http://localhost:8081/tours",
+                jsonContent);
+
+            var updatedTour = await response.Content.ReadFromJsonAsync<TourResponseDto>();
+            return updatedTour;
         }
     }
 
