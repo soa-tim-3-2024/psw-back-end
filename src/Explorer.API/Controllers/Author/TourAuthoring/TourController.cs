@@ -15,13 +15,13 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
-        private readonly IHttpClientFactory _factory;
 
-        public TourController(ITourService tourService, IHttpClientFactory factory)
+        public TourController(ITourService tourService)
         {
             _tourService = tourService;
-            _factory = factory;
         }
+
+        private static readonly HttpClient _sharedClient = new();
 
         [Authorize(Roles = "author")]
         [HttpGet]
@@ -43,12 +43,11 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpGet("authors")]
         public async Task<ActionResult<List<TourResponseDto>>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var client = _factory.CreateClient();
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
             /*var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
             return CreateResponse(result);*/
-            var tours = await GetAuthorsToursGo(client, id);
+            var tours = await GetAuthorsToursGo(_sharedClient, id);
             return tours;
         }
 
@@ -56,7 +55,6 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpPost]
         public async Task<ActionResult<TourResponseDto>> Create([FromBody] TourCreateDto tour)
         {
-            var client = _factory.CreateClient();
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
@@ -64,7 +62,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             }
             /*var result = _tourService.Create(tour);
             return CreateResponse(result);*/
-            var tourResponse = await CreateTourGo(client, tour);
+            var tourResponse = await CreateTourGo(_sharedClient, tour);
             return tourResponse;
         }
 
@@ -72,7 +70,6 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpPut("{id:int}")]
         public async Task<ActionResult<TourResponseDto>> Update([FromBody] TourUpdateDto tour)
         {
-            var client = _factory.CreateClient();
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
@@ -81,7 +78,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             /*var result = _tourService.Update(tour);
             return CreateResponse(result);
             */
-            var tourResponse = await UpdateTourGo(client, tour);
+            var tourResponse = await UpdateTourGo(_sharedClient, tour);
             return tourResponse;
         }
 

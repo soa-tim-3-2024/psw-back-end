@@ -14,22 +14,19 @@ namespace Explorer.API.Controllers.Tourist.TourExecution;
 public class TouristPositionController : BaseApiController
 {
     private readonly ITouristPositionService _touristPositionService;
-    private readonly IHttpClientFactory _factory;
-
-    public TouristPositionController(ITouristPositionService touristPositionService, IHttpClientFactory factory)
+    private static readonly HttpClient _sharedClient = new();
+    public TouristPositionController(ITouristPositionService touristPositionService)
     {
         _touristPositionService = touristPositionService;
-        _factory = factory;
     }
 
     [HttpPost("position")]
     public async Task<ActionResult<TouristPositionResponseDto>> Create([FromBody] TouristPositionCreateDto touristPosition)
     {
-        var client = _factory.CreateClient();
         /*var result = _touristPositionService.Create(touristPosition);
         return CreateResponse(result);
         */
-        var position = await AddPositionGo(client, touristPosition);
+        var position = await AddPositionGo(_sharedClient, touristPosition);
         return position;
     }
 
@@ -38,8 +35,7 @@ public class TouristPositionController : BaseApiController
     {
         /*var result = _touristPositionService.Update(touristPosition);
         return CreateResponse(result);*/
-        var client = _factory.CreateClient();
-        var position = await UpdatePositionGo(client, touristPosition);
+        var position = await UpdatePositionGo(_sharedClient, touristPosition);
         return position;
     }
 
@@ -48,8 +44,7 @@ public class TouristPositionController : BaseApiController
     {
        /* var result = _touristPositionService.GetByTouristId(touristId);
         return CreateResponse(result);*/
-        var client = _factory.CreateClient();
-        var position = await GetTouristPositionGo(client, touristId);
+        var position = await GetTouristPositionGo(_sharedClient, touristId);
         return position;
     }
 

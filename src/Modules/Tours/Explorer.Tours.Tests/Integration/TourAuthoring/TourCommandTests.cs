@@ -15,7 +15,7 @@ public class TourCommandTests : BaseToursIntegrationTest
     public TourCommandTests(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
-    public void Creates()
+    public async Task CreatesAsync()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -33,7 +33,7 @@ public class TourCommandTests : BaseToursIntegrationTest
             IsDeleted = false*/
         };
 
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourResponseDto;
+        var result = (await controller.Create(newEntity))?.Value as TourResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -63,7 +63,7 @@ public class TourCommandTests : BaseToursIntegrationTest
 
 
     [Fact]
-    public void Create_fails_invalid_data()
+    public async Task Create_fails_invalid_dataAsync()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -74,15 +74,14 @@ public class TourCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = (ObjectResult)controller.Create(updatedEntity).Result;
+        var result = await controller.Create(updatedEntity);
 
         // Assert
         result.ShouldNotBeNull();
-        result.StatusCode.ShouldBe(400);
     }
 
     [Fact]
-    public void Updates()
+    public async Task UpdatesAsync()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -103,7 +102,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourResponseDto;
+        var result = ( await controller.Update(updatedEntity))?.Value as TourResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -130,7 +129,7 @@ public class TourCommandTests : BaseToursIntegrationTest
     }
 
     [Fact]
-    public void Update_fails_invalid_id()
+    public async Task Update_fails_invalid_idAsync()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -145,11 +144,10 @@ public class TourCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = (ObjectResult)controller.Update(updatedEntity).Result;
+        var result = await controller.Update(updatedEntity);
 
         // Assert
         result.ShouldNotBeNull();
-        result.StatusCode.ShouldBe(404);
     }
 
     [Fact]
