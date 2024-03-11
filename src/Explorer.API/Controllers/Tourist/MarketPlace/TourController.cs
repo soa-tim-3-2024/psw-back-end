@@ -13,6 +13,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
     {
         private readonly ITourService _tourService;
         private readonly IShoppingCartService _shoppingCartService;
+        private static readonly HttpClient _sharedClient = new();
 
         public TourController(ITourService service, IShoppingCartService shoppingCartService)
         {
@@ -29,10 +30,20 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         }
 
         [HttpGet("tours/{tourId:long}")]
-        public ActionResult<PagedResult<TourResponseDto>> GetById(long tourId)
+        public async Task<ActionResult<TourResponseDto>> GetByIdAsync(long tourId)
         {
-            var result = _tourService.GetById(tourId);
-            return CreateResponse(result);
+            //var result = _tourService.GetById(tourId);
+            //return CreateResponse(result);
+            var tour = await GetTourGo(_sharedClient, tourId);
+            return tour;
+        }
+
+        static async Task<TourResponseDto> GetTourGo(HttpClient httpClient, long id)
+        {
+            var tour = await httpClient.GetFromJsonAsync<TourResponseDto>(
+                "http://localhost:8081/tour/" + id);
+            return tour;
+
         }
 
         [HttpGet("tours/can-be-rated/{tourId:long}")]
