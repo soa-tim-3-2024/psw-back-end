@@ -4,6 +4,9 @@ using Explorer.Tours.API.Public.TourAuthoring;
 using Explorer.Tours.Core.UseCases.TourAuthoring;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring;
 
@@ -11,6 +14,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring;
 public class KeyPointController : BaseApiController
 {
     private readonly IKeyPointService _keyPointService;
+    private static readonly HttpClient _sharedClient = new();
 
     public KeyPointController(IKeyPointService keyPointService)
     {
@@ -19,13 +23,29 @@ public class KeyPointController : BaseApiController
 
     [Authorize(Roles = "author")]
     [HttpPost("tours/{tourId:long}/key-points")]
-    public ActionResult<KeyPointResponseDto> CreateKeyPoint([FromRoute] long tourId, [FromBody] KeyPointCreateDto keyPoint)
+    public async Task<ActionResult<KeyPointResponseDto>> CreateKeyPoint([FromRoute] long tourId, [FromBody] KeyPointCreateDto keyPoint)
     {
         keyPoint.TourId = tourId;
-        var result = _keyPointService.Create(keyPoint);
-        return CreateResponse(result);
+        //var result = _keyPointService.Create(keyPoint);
+        //return CreateResponse(result);
+        var result = await CreateKeyPointGo(_sharedClient, keyPoint);
+        return result;
     }
+    static async Task<KeyPointResponseDto> CreateKeyPointGo(HttpClient httpClient, KeyPointCreateDto kp)
+    {
+        using StringContent jsonContent = new(
+            JsonSerializer.Serialize(kp),
+            Encoding.UTF8,
+            "application/json");
+        Console.WriteLine(jsonContent);
 
+        using HttpResponseMessage response = await httpClient.PostAsync(
+            "http://localhost:8081/keyPoints",
+            jsonContent);
+        Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+        var kpResponse = await response.Content.ReadFromJsonAsync<KeyPointResponseDto>();
+        return kpResponse;
+    }
     [Authorize(Roles = "author")]
     [HttpPut("tours/{tourId:long}/key-points/{id:long}")]
     public ActionResult<KeyPointResponseDto> Update(long tourId, long id, [FromBody] KeyPointUpdateDto keyPoint)
