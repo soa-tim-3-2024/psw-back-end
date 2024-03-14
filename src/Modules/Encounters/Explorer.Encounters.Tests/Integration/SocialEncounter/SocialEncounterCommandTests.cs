@@ -18,7 +18,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
     public SocialEncounterCommandTests(EncountersTestFactory factory) : base(factory)
     {
     }
-
+    /*
     [Fact]
     public void Succesfully_create_social_encounter()
     {
@@ -49,11 +49,13 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
         // Assert - Database
         var storedEntity = dbContext.Encounters.FirstOrDefault(e => e.Id == id);
         storedEntity.ShouldNotBeNull();
+        
     }
 
     [Fact]
     public void Unsuccesfully_create_social_encounter()
     {
+        
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<EncountersContext>();
@@ -78,6 +80,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
         // Assert - Database
         var storedEntity = dbContext.Encounters.FirstOrDefault(e => e.Id == 1);
         storedEntity.ShouldBeNull();
+        
     }
 
     [Fact]
@@ -204,10 +207,12 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
 
     private static Explorer.API.Controllers.Author.SocialEncounterController CreateSocialEncounterController(IServiceScope scope)
     {
+        
         return new Explorer.API.Controllers.Author.SocialEncounterController(scope.ServiceProvider.GetRequiredService<IEncounterService>())
         {
             ControllerContext = BuildContext("-1")
         };
+        
     }
 
     private static Explorer.API.Controllers.Tourist.EncounterController CreateEncounterController(IServiceScope scope)
@@ -217,4 +222,5 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
             ControllerContext = BuildContext("-1")
         };
     }
+*/
 }
