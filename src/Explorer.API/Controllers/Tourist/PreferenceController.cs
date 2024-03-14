@@ -3,6 +3,11 @@ using Explorer.Tours.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Explorer.Tours.Core.Domain.Tours;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text;
+using System.Net.Http;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -11,6 +16,7 @@ namespace Explorer.API.Controllers.Tourist
     public class PreferenceController : BaseApiController
     {
         private readonly IPreferenceService _tourPreferencesService;
+        private static readonly HttpClient _sharedClient = new();
 
         public PreferenceController(IPreferenceService tourPreferencesService)
         {
@@ -18,7 +24,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet]
-        public ActionResult<PreferenceResponseDto> Get()
+        public async Task<ActionResult<PreferenceResponseDto>> Get()
         {
            // int userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             int id = 0;
@@ -27,31 +33,87 @@ namespace Explorer.API.Controllers.Tourist
             {
                 id = int.Parse(identity.FindFirst("id").Value);
             }
-            var result = _tourPreferencesService.GetByUserId(id);
-            return CreateResponse(result);
+            //var result = _tourPreferencesService.GetByUserId(id);
+            //return CreateResponse(result);
+            var pref = await GetPrefGo(_sharedClient, id);
+            return pref;
+        }
+        static async Task<PreferenceResponseDto> GetPrefGo(HttpClient httpClient, long id)
+        {
+            var pref = await httpClient.GetFromJsonAsync<PreferenceResponseDto>(
+                "http://localhost:8081/preference/" + id);
+            return pref;
+
         }
 
         [HttpPost("create")]
-        public ActionResult<PreferenceResponseDto> Create([FromBody] PreferenceCreateDto preference)
+        public async Task<ActionResult<PreferenceResponseDto>> Create([FromBody] PreferenceCreateDto preference)
         {
             preference.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _tourPreferencesService.Create(preference);
-            return CreateResponse(result);
+            //var result = _tourPreferencesService.Create(preference);
+            //return CreateResponse(result);
+            var tourResponse = await CreatePreferenceGo(_sharedClient, preference);
+            return tourResponse;
+        }
+
+        static async Task<PreferenceResponseDto> CreatePreferenceGo(HttpClient httpClient, PreferenceCreateDto pref)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(pref),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PostAsync(
+                "http://localhost:8081/preference",
+                jsonContent);
+            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+            var prefResponse = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
+            return prefResponse;
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var result = _tourPreferencesService.Delete(id);
-            return CreateResponse(result);
+            //var result = _tourPreferencesService.Delete(id);
+            //return CreateResponse(result);
+            var response = await _sharedClient.DeleteAsync(
+                "http://localhost:8081/preference/" + id);
+            return Ok(response.Content);
+        }
+        static async Task<PreferenceResponseDto> DeletePrefGo(HttpClient httpClient, long id)
+        {
+            var response = await httpClient.DeleteAsync(
+                "http://localhost:8081/preference/" + id);
+            var pref = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
+            return pref;
+
         }
 
         [HttpPut]
-        public ActionResult<PreferenceResponseDto> Update([FromBody] PreferenceUpdateDto preference)
+        public async Task<ActionResult<PreferenceResponseDto>> Update([FromBody] PreferenceUpdateDto preference)
         {
             preference.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _tourPreferencesService.Update(preference);
-            return CreateResponse(result);
+            //var result = _tourPreferencesService.Update(preference);
+            //return CreateResponse(result);
+            var tourResponse = await UpdatePreferenceGo(_sharedClient, preference);
+            return tourResponse;
+        }
+
+        static async Task<PreferenceResponseDto> UpdatePreferenceGo(HttpClient httpClient, PreferenceUpdateDto pref)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(pref),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PutAsync(
+                "http://localhost:8081/preference",
+                jsonContent);
+            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+            var prefResponse = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
+            return prefResponse;
         }
     }
 }
