@@ -1,9 +1,11 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
+using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos.TouristPosition;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -13,10 +15,14 @@ namespace Explorer.API.Controllers.Tourist
     {
         private readonly IEncounterService _encounterService;
         private readonly ITouristProgressService _progressService;
-        public EncounterController(IEncounterService encounterService, ITouristProgressService progressService)
+        private readonly IUserService _userService;
+        private readonly IHttpClientFactory _factory;
+        public EncounterController(IEncounterService encounterService, ITouristProgressService progressService, IUserService userService, IHttpClientFactory factory)
         {
             _encounterService = encounterService;
             _progressService = progressService;
+            _userService = userService;
+            _factory = factory; _factory = factory;
         }
 
         [HttpGet("{encounterId:long}/instance")]
@@ -101,12 +107,42 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("progress")]
-        public ActionResult<TouristProgressResponseDto> GetProgress()
+        /*public ActionResult<TouristProgressResponseDto> GetProgress()
         {
             long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _progressService.GetByUserId(userId);
 
             return CreateResponse(result);
+        } */
+
+
+        public async Task<ActionResult<TouristProgressResponseDto>> GetProgress()
+        {
+            var client = _factory.CreateClient();
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var user = _userService.Get(userId).Value;
+            var progress = await GetTouristProgressGo(client, userId);
+            var result = new TouristProgressResponseDto();
+            result.Xp = progress.Xp;
+            result.UserId = progress.UserId;
+            result.Level = progress.Level;
+            result.User = user;
+            Debug.WriteLine("test");
+            return result;
         }
+
+
+        static async Task<GolangProgressDto> GetTouristProgressGo(HttpClient httpClient, long userId)
+        {
+            var progress = await httpClient.GetFromJsonAsync<GolangProgressDto>(
+                "http://localhost:8082/progress/" + userId);
+            Debug.WriteLine("test");
+            return progress;
+
+        }
+
+
+
+
     }
 }
