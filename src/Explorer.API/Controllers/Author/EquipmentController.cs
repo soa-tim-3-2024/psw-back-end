@@ -11,6 +11,7 @@ namespace Explorer.API.Controllers.Author
     public class EquipmentController : BaseApiController
     {
         private readonly IEquipmentService _equipmentService;
+        private static readonly HttpClient _sharedClient = new();
 
         public EquipmentController(IEquipmentService equipmentService)
         {
@@ -18,10 +19,13 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<EquipmentResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<List<EquipmentResponseDto>>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _equipmentService.GetPaged(page, pageSize);
-            return CreateResponse(result);
+            //var result = _equipmentService.GetPaged(page, pageSize);
+            //return CreateResponse(result);
+            var pref = await _sharedClient.GetFromJsonAsync<List<EquipmentResponseDto>>(
+                "http://localhost:8081/equipment/all");
+            return pref;
         }
     }
 }

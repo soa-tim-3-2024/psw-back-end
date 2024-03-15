@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text;
 using System.Diagnostics;
+using FluentResults;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
@@ -92,26 +93,45 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("equipment/{tourId:int}")]
-        public ActionResult GetEquipment(int tourId)
+        public async Task<ActionResult<List<EquipmentResponseDto>>> GetEquipment(int tourId)
         {
-            var result = _tourService.GetEquipment(tourId);
-            return CreateResponse(result);
+            //var result = _tourService.GetEquipment(tourId);
+            //return CreateResponse(result);
+            var eq = await _sharedClient.GetFromJsonAsync<List<EquipmentResponseDto>>(
+                "http://localhost:8081/equipment/tour/" + tourId);
+            return eq;
         }
 
         [Authorize(Roles = "author, tourist")]
         [HttpPost("equipment/{tourId:int}/{equipmentId:int}")]
-        public ActionResult AddEquipment(int tourId, int equipmentId)
+        public async Task<ActionResult> AddEquipment(int tourId, int equipmentId)
         {
-            var result = _tourService.AddEquipment(tourId, equipmentId);
-            return CreateResponse(result);
+            //var result = _tourService.AddEquipment(tourId, equipmentId);
+            //return CreateResponse(result);
+            var eq = await _sharedClient.PostAsync(
+                "http://localhost:8081/equipment/" + equipmentId +"/"+ tourId, null);
+            if(eq != null)
+            {
+                return Ok(eq);
+
+            }
+            return NotFound(eq);
         }
 
         [Authorize(Roles = "author, tourist")]
         [HttpDelete("equipment/{tourId:int}/{equipmentId:int}")]
-        public ActionResult DeleteEquipment(int tourId, int equipmentId)
+        public async Task<ActionResult> DeleteEquipment(int tourId, int equipmentId)
         {
-            var result = _tourService.DeleteEquipment(tourId, equipmentId);
-            return CreateResponse(result);
+            //var result = _tourService.DeleteEquipment(tourId, equipmentId);
+            //return CreateResponse(result);
+            var eq = await _sharedClient.DeleteAsync(
+                "http://localhost:8081/equipment/" + equipmentId + "/" + tourId);
+            if (eq != null)
+            {
+                return Ok(eq);
+
+            }
+            return NotFound(eq);
         }
 
         [Authorize(Roles = "author, tourist")]
@@ -124,16 +144,10 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author")]
         [HttpPut("publish/{id:int}")]
-        public ActionResult<TourResponseDto> Publish(long id)
+        public async Task<ActionResult<int>> Publish(long id, [FromBody]TourUpdateDto tour)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            long authorId = -1;
-            if (identity != null && identity.IsAuthenticated)
-            {
-                authorId = long.Parse(identity.FindFirst("id").Value);
-            }
-            var result = _tourService.Publish(id, authorId);
-            return CreateResponse(result);
+            var tourResponse = await PublishTourGo(_sharedClient, tour);
+            return tourResponse;
         }
 
         [Authorize(Roles = "author")]
@@ -218,6 +232,20 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
             var updatedTour = await response.Content.ReadFromJsonAsync<TourResponseDto>();
             return updatedTour;
+        }
+        static async Task<int> PublishTourGo(HttpClient httpClient, TourUpdateDto tour)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(tour),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PutAsync(
+                "http://localhost:8081/tours/publish",
+                jsonContent);
+            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+            return 1;
         }
     }
 
