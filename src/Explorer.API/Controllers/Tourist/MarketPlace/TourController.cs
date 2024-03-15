@@ -4,7 +4,10 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 
 namespace Explorer.API.Controllers.Tourist.MarketPlace
 {
@@ -23,10 +26,10 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("tours/published")]
-        public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<List<TourResponseDto>>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _tourService.GetPublishedLimitedView(page, pageSize);
-            return CreateResponse(result);
+            var tours = await GetPublishedToursGo(_sharedClient);
+            return tours;
         }
 
         [HttpGet("tours/{tourId:long}")]
@@ -61,7 +64,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         [Authorize(Policy = "touristPolicy")]
         [Authorize(Roles = "tourist")]
         [HttpGet("tours/inCart/{id:long}")]
-        public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
+        public async Task<ActionResult<List<TourResponseDto>>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
             var cart = _shoppingCartService.GetByTouristId(id);
             if (cart.Value == null)
@@ -69,8 +72,9 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
                 return NotFound();
             }
             var tourIds = cart.Value.OrderItems.Select(order => order.TourId).ToList();
-            var result = _tourService.GetLimitedInfoTours(page, pageSize, tourIds);
-            return CreateResponse(result);
+            //var result = _tourService.GetLimitedInfoTours(page, pageSize, tourIds);
+            var result = await GetToursByIdGo(_sharedClient, tourIds);
+            return result;
         }
         /*[HttpGet("tours/inCart/{id:long}")]
         public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
@@ -111,6 +115,29 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         {
             var result = _tourService.GetCulturalTours(page, pageSize);
             return CreateResponse(result);
+        }
+
+        static async Task<List<TourResponseDto>> GetPublishedToursGo(HttpClient httpClient)
+        {
+            var tours = await httpClient.GetFromJsonAsync<List<TourResponseDto>>(
+                "http://localhost:8081/tours/published/all");
+            return tours;
+        }
+        static async Task<List<TourResponseDto>> GetToursByIdGo(HttpClient httpClient, List<long> Ids)
+        {
+            TourIdsDto IdsDto = new TourIdsDto();
+            IdsDto.Ids = Ids;
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(IdsDto),
+                Encoding.UTF8,
+                "application/json");
+            
+            var response = await httpClient.PostAsync(
+                "http://localhost:8081/tours/tours-list",
+                jsonContent);
+            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+            var tours = await response.Content.ReadFromJsonAsync<List<TourResponseDto>>();
+            return tours;
         }
 
     }
