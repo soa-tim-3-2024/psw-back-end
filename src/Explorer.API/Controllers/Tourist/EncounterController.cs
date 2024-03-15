@@ -6,6 +6,7 @@ using Explorer.Tours.API.Dtos.TouristPosition;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -72,11 +73,21 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost("in-range-of")]
-        public ActionResult<PagedResult<EncounterResponseDto>> GetAllInRangeOf([FromBody] UserPositionWithRangeDto position, [FromQuery] int page, [FromQuery] int pageSize)
+        /*public ActionResult<PagedResult<EncounterResponseDto>> GetAllInRangeOf([FromBody] UserPositionWithRangeDto position, [FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _encounterService.GetAllInRangeOf(position.Range, position.Longitude, position.Latitude, page, pageSize);
             return CreateResponse(result);
+        } */
+
+        public async Task<ActionResult<List<EncounterResponseDto>>> GetAllInRangeOf([FromBody] UserPositionWithRangeDto position, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var client = _factory.CreateClient();
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //var id = long.Parse(identity.FindFirst("id").Value);
+            var tours = await GetAllEncountersGo(client);
+            return tours;
         }
+
 
 
         [HttpGet("done-encounters")]
@@ -138,6 +149,14 @@ namespace Explorer.API.Controllers.Tourist
                 "http://localhost:8082/progress/" + userId);
             Debug.WriteLine("test");
             return progress;
+
+        }
+
+        static async Task<List<EncounterResponseDto>> GetAllEncountersGo(HttpClient httpClient)
+        {
+            var encounters = await httpClient.GetFromJsonAsync<List<EncounterResponseDto>>(
+                "http://localhost:8082/encounters/all/");
+            return encounters;
 
         }
 
