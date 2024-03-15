@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text;
 using System.Diagnostics;
 using FluentResults;
+using Explorer.Tours.Core.Domain.Tours;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
@@ -152,16 +153,10 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author")]
         [HttpPut("archive/{id:int}")]
-        public ActionResult<TourResponseDto> Archive(long id)
+        public async Task<ActionResult<int>> Archive(long id, [FromBody]TourUpdateDto tour)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            long authorId = -1;
-            if (identity != null && identity.IsAuthenticated)
-            {
-                authorId = long.Parse(identity.FindFirst("id").Value);
-            }
-            var result = _tourService.Archive(id, authorId);
-            return CreateResponse(result);
+            var tourResponse = await ArchiveTourGo(_sharedClient, tour);
+            return tourResponse;
         }
 
         [Authorize(Roles = "tourist")]
@@ -247,6 +242,22 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             return 1;
         }
+
+        static async Task<int> ArchiveTourGo(HttpClient httpClient, TourUpdateDto tour)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(tour),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PutAsync(
+                "http://localhost:8081/tours/archive",
+                jsonContent);
+            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+            return 1;
+        }
+
     }
 
 
