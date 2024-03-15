@@ -81,14 +81,6 @@ namespace Explorer.API.Controllers.Tourist
                 "http://localhost:8081/preference/" + id);
             return Ok(response.Content);
         }
-        static async Task<PreferenceResponseDto> DeletePrefGo(HttpClient httpClient, long id)
-        {
-            var response = await httpClient.DeleteAsync(
-                "http://localhost:8081/preference/" + id);
-            var pref = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
-            return pref;
-
-        }
 
         [HttpPut]
         public async Task<ActionResult<PreferenceResponseDto>> Update([FromBody] PreferenceUpdateDto preference)

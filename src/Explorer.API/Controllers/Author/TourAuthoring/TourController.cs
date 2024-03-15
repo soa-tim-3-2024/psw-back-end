@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text;
 using System.Diagnostics;
+using FluentResults;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
@@ -92,26 +93,45 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("equipment/{tourId:int}")]
-        public ActionResult GetEquipment(int tourId)
+        public async Task<ActionResult<List<EquipmentResponseDto>>> GetEquipment(int tourId)
         {
-            var result = _tourService.GetEquipment(tourId);
-            return CreateResponse(result);
+            //var result = _tourService.GetEquipment(tourId);
+            //return CreateResponse(result);
+            var eq = await _sharedClient.GetFromJsonAsync<List<EquipmentResponseDto>>(
+                "http://localhost:8081/equipment/tour/" + tourId);
+            return eq;
         }
 
         [Authorize(Roles = "author, tourist")]
         [HttpPost("equipment/{tourId:int}/{equipmentId:int}")]
-        public ActionResult AddEquipment(int tourId, int equipmentId)
+        public async Task<ActionResult> AddEquipment(int tourId, int equipmentId)
         {
-            var result = _tourService.AddEquipment(tourId, equipmentId);
-            return CreateResponse(result);
+            //var result = _tourService.AddEquipment(tourId, equipmentId);
+            //return CreateResponse(result);
+            var eq = await _sharedClient.PostAsync(
+                "http://localhost:8081/equipment/" + equipmentId +"/"+ tourId, null);
+            if(eq != null)
+            {
+                return Ok(eq);
+
+            }
+            return NotFound(eq);
         }
 
         [Authorize(Roles = "author, tourist")]
         [HttpDelete("equipment/{tourId:int}/{equipmentId:int}")]
-        public ActionResult DeleteEquipment(int tourId, int equipmentId)
+        public async Task<ActionResult> DeleteEquipment(int tourId, int equipmentId)
         {
-            var result = _tourService.DeleteEquipment(tourId, equipmentId);
-            return CreateResponse(result);
+            //var result = _tourService.DeleteEquipment(tourId, equipmentId);
+            //return CreateResponse(result);
+            var eq = await _sharedClient.DeleteAsync(
+                "http://localhost:8081/equipment/" + equipmentId + "/" + tourId);
+            if (eq != null)
+            {
+                return Ok(eq);
+
+            }
+            return NotFound(eq);
         }
 
         [Authorize(Roles = "author, tourist")]
