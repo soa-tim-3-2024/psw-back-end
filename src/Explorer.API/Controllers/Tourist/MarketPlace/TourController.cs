@@ -5,6 +5,7 @@ using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -50,10 +51,13 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         }
 
         [HttpGet("tours/can-be-rated/{tourId:long}")]
-        public bool CanTourBeRated(long tourId)
+        public async Task<bool> CanTourBeRated(long tourId)
         {
             long userId = extractUserIdFromHttpContext();
-            return _tourService.CanTourBeRated(tourId, userId).Value;
+            //return _tourService.CanTourBeRated(tourId, userId).Value;
+            var res = await _sharedClient.GetFromJsonAsync<bool>(
+                "http://localhost:8081/tour/canBeRated/" + tourId + "/" + userId);
+            return res;
         }
 
         private long extractUserIdFromHttpContext()

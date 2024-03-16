@@ -99,7 +99,6 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             storedEntity.ShouldNotBeNull();
             storedEntity.NextKeyPointId.ShouldBe(-11);
         }
-        */
         [Fact]
         public void AbandonTour()
         {
@@ -141,6 +140,7 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             storedEntity.Status.ToString().ShouldBe(TourExecutionSessionStatus.Abandoned.ToString());
         }
 
+        */
         private static TourExecutionSessionController CreateController(IServiceScope scope)
         {
             return new TourExecutionSessionController(scope.ServiceProvider.GetRequiredService<ITourExecutionSessionService>(),

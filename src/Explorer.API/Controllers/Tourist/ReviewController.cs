@@ -1,9 +1,15 @@
 ﻿using System.Security.Claims;
+using Castle.Components.DictionaryAdapter.Xml;
+using System.Text.Json;
+using System.Text;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 
 namespace Explorer.API.Controllers.Tourist
@@ -13,6 +19,7 @@ namespace Explorer.API.Controllers.Tourist
     public class ReviewController : BaseApiController
     {
         private readonly IReviewService _reviewService;
+        private static readonly HttpClient _sharedClient = new();
 
         public ReviewController(IReviewService reviewService)
         {
@@ -21,11 +28,15 @@ namespace Explorer.API.Controllers.Tourist
 
         //[Authorize(Policy = "nonAdministratorPolicy")]
         [HttpGet("{tourId:int}")]
-        public ActionResult<PagedResult<ReviewResponseDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, long tourId)
+        public async Task<ActionResult<List<ReviewResponseDto>>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, long tourId)
         {
-            var result = _reviewService.GetPagedByTourId(page, pageSize, tourId);
-            return CreateResponse(result);
+            //var result = _reviewService.GetPagedByTourId(page, pageSize, tourId);
+            //return CreateResponse(result);
+            var tours = await _sharedClient.GetFromJsonAsync<List<ReviewResponseDto>>(
+                "http://localhost:8081/reviews/" + tourId);
+            return tours;
         }
+
         [Authorize(Policy = "nonAdministratorPolicy")]
         [HttpGet("{touristId:long}/{tourId:long}")]
         public ActionResult<Boolean> ReviewExists(long touristId, long tourId)
@@ -36,7 +47,7 @@ namespace Explorer.API.Controllers.Tourist
 
         [Authorize(Policy = "touristPolicy")]
         [HttpPost]
-        public ActionResult<ReviewResponseDto> Create([FromBody] ReviewCreateDto review)
+        public async Task<ActionResult<ReviewResponseDto>> Create([FromBody] ReviewCreateDto review)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
@@ -44,8 +55,16 @@ namespace Explorer.API.Controllers.Tourist
               review.TouristId = long.Parse(identity.FindFirst("id").Value);  
             }
             review.CommentDate = DateOnly.FromDateTime(DateTime.Now);
-            var result = _reviewService.Create(review);
-            return CreateResponse(result);
+            //var result = _reviewService.Create(review);
+            //return CreateResponse(result);
+            using StringContent jsonContent = new(
+               JsonSerializer.Serialize(review),
+               Encoding.UTF8,
+               "application/json");
+            var res = await _sharedClient.PostAsync(
+                "http://localhost:8081/review", jsonContent);
+            var resFinal = await res.Content.ReadFromJsonAsync<ReviewResponseDto>();
+            return resFinal;
         }
 
         [Authorize(Policy = "touristPolicy")]
