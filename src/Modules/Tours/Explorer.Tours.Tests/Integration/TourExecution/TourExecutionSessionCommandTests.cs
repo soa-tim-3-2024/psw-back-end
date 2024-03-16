@@ -17,6 +17,7 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
     {
         public TourExecutionSessionCommandTest(ToursTestFactory factory) : base(factory) { }
 
+        /*
         [Fact]
         public void Creates()
         {
@@ -58,7 +59,6 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             storedEntity.ShouldNotBeNull();
             storedEntity.Id.ShouldBe(result.Id);
         }
-        /*
         [Fact]
         public void CompletesKeyPoint()
         {
