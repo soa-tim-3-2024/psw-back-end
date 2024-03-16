@@ -70,8 +70,8 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPut]
-        [Route("abandoning")]
-        public ActionResult<TourExecutionSessionResponseDto> AbandonTour(TourExecutionDto executionDto)
+        [Route("abandoning/{executionId}")]
+        public async Task<ActionResult<TourExecutionSessionResponseDto>> AbandonTour([FromBody]TourExecutionDto executionDto, long executionId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId;
@@ -80,12 +80,12 @@ namespace Explorer.API.Controllers.Tourist
             // za potrebe testiranja
             else
                 touristId = -21;
-            var result = _tourExecutionService.AbandonTour(executionDto.TourId, executionDto.IsCampaign, touristId);
+            var result = await AbandondTourGo(_sharedClient, executionId);
             if (result == null)
             {
                 return BadRequest();
             }
-            return CreateResponse(result);
+            return result;
         }
 
         [HttpPut]
@@ -154,6 +154,14 @@ namespace Explorer.API.Controllers.Tourist
         {
             var response = await httpClient.GetAsync(
                 "http://localhost:8081/tour-execution/"+tourId+"/"+touristId);
+            var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
+            return execution;
+        }
+
+        static async Task<TourExecutionSessionResponseDto> AbandondTourGo(HttpClient httpClient, long id)
+        {
+            var response = await httpClient.GetAsync(
+                "http://localhost:8081/tour-execution-abandoning/" + id);
             var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
             return execution;
         }
