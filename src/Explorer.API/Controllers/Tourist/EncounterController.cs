@@ -11,6 +11,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text;
 using System.Security.Claims;
+using Explorer.BuildingBlocks.Infrastructure.Database;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -31,11 +33,15 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("{encounterId:long}/instance")]
-        public ActionResult<EncounterResponseDto> GetInstance(long encounterId)
+        public async Task<ActionResult<bool>> GetInstance(int encounterId)
         {
-            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _encounterService.GetInstance(userId, encounterId);
-            return CreateResponse(result);
+            //long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            //var result = _encounterService.GetInstance(userId, encounterId);
+            //return CreateResponse(result);
+            var client = _factory.CreateClient();
+            int userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = await GetInstanceGo(client, userId, encounterId);
+            return Ok(result);
         }
 
         [HttpPost("{id}/activate")]
@@ -46,25 +52,46 @@ namespace Explorer.API.Controllers.Tourist
             position.TouristId = userId;
 
             var result = await ActivateGo(client, position, id);
-            
+            if(result.Value != null && result.Value.Id == -1)
+            {
+                return BadRequest();
+            }
+
             //var result = _encounterService.ActivateEncounter(userId, id, position.Longitude, position.Latitude);
-            return result;
+            return Ok(result);
         }
 
         [HttpPost("{id:long}/complete")]
-        public ActionResult<EncounterResponseDto> Complete(long id)
+        public async Task<ActionResult<EncounterResponseDto>> Complete(int id)
         {
-            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _encounterService.CompleteEncounter(userId, id);
-            return CreateResponse(result);
+            //long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            //var result = _encounterService.CompleteEncounter(userId, id);
+            //return CreateResponse(result);
+            var client = _factory.CreateClient();
+            int userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = await CompleteGo(client, userId, id);
+            if(result.Value != null && result.Value.Id == -1){
+                return BadRequest();
+            }
+            return Ok(result);
         }
 
         [HttpGet("{id:long}/cancel")]
-        public ActionResult<EncounterResponseDto> Cancel(long id)
+        public async Task<ActionResult<EncounterResponseDto>> Cancel(int id)
         {
-            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _encounterService.CancelEncounter(userId, id);
-            return CreateResponse(result);
+            //long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            //var result = _encounterService.CancelEncounter(userId, id);
+            //return CreateResponse(result);
+            var client = _factory.CreateClient();
+            int userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = await CancelGo(client, userId, id);
+            if(result.Value != null && result.Value.Id == -1){
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
 
         [HttpGet("{id:long}")]
@@ -100,10 +127,14 @@ namespace Explorer.API.Controllers.Tourist
 
 
         [HttpGet("done-encounters")]
-        public ActionResult<PagedResult<EncounterResponseDto>> GetAllDoneByUser(int currentUserId, [FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<List<EncounterResponseDto>>> GetAllDoneByUser(int currentUserId, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _encounterService.GetAllDoneByUser(currentUserId, page, pageSize);
-            return CreateResponse(result);
+            //var result = _encounterService.GetAllDoneByUser(currentUserId, page, pageSize);
+            //return CreateResponse(result);
+            var client = _factory.CreateClient();
+            int userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = await GetAllDoneByUserGo(client, userId);
+            return result;
         }
 
         [HttpGet("active")]
@@ -167,14 +198,59 @@ namespace Explorer.API.Controllers.Tourist
                 JsonSerializer.Serialize(position),
                 Encoding.UTF8,
                 "application/json");
-                Console.WriteLine(jsonContent);
+            Console.WriteLine(jsonContent);
             using HttpResponseMessage response = await httpClient.PostAsync(
                 "http://localhost:8082/encounters/activate/" + id,
                 jsonContent);
-            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
-            var encounterResponse = await response.Content.ReadFromJsonAsync<EncounterResponseDto>();
-            return encounterResponse;
+            if(response.IsSuccessStatusCode)
+            {
+                Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+                var encounterResponse = await response.Content.ReadFromJsonAsync<EncounterResponseDto>();
+                return encounterResponse;
+            }
+            var temp = new EncounterResponseDto();
+            temp.Id = -1;
+            return temp;
         }
+
+        static async Task<ActionResult<EncounterResponseDto>> CancelGo(HttpClient httpClient, int userId, int encounterId)
+        {
+            using HttpResponseMessage response = await httpClient.GetAsync(
+               "http://localhost:8082/encounters/cancel/" + userId + "/" + encounterId);
+            var encounterResponse = await response.Content.ReadFromJsonAsync<EncounterResponseDto>();
+            if(response.IsSuccessStatusCode)
+            {
+                var temp = new EncounterResponseDto();
+                temp.Id = encounterId;
+                return temp;
+            }
+            else
+            {
+                var temp = new EncounterResponseDto();
+                temp.Id = -1;
+                return temp;
+            }
+        }
+
+        static async Task<ActionResult<EncounterResponseDto>> CompleteGo(HttpClient httpClient, int userId, int encounterId)
+        {
+            using HttpResponseMessage response = await httpClient.GetAsync(
+               "http://localhost:8082/encounters/complete/" + userId + "/" + encounterId);
+            if (response.IsSuccessStatusCode)
+            {
+                var encounterResponse = await response.Content.ReadFromJsonAsync<EncounterResponseDto>();
+                var temp = new EncounterResponseDto();
+                temp.Id = encounterId;
+                return temp;
+            }
+            else
+            {
+                var temp = new EncounterResponseDto();
+                temp.Id = -1;
+                return temp;
+            }
+        }
+        
         static async Task<List<EncounterResponseDto>> GetAllEncountersGo(HttpClient httpClient)
         {
             var encounters = await httpClient.GetFromJsonAsync<List<EncounterResponseDto>>(
@@ -182,7 +258,19 @@ namespace Explorer.API.Controllers.Tourist
             return encounters;
         }
 
+        static async Task<List<EncounterResponseDto>> GetAllDoneByUserGo(HttpClient httpClient, int currentUserId)
+        {
+            var encounters = await httpClient.GetFromJsonAsync<List<EncounterResponseDto>>(
+                "http://localhost:8082/encounters/getCompletedByUser/" + currentUserId);
+            return encounters;
+        }
 
+        static async Task<bool> GetInstanceGo(HttpClient httpClient, int userId, int encounterId)
+        {
+            var isCompleted = await httpClient.GetFromJsonAsync<bool>(
+                "http://localhost:8082/encounters/comleted/" + userId + "/" + encounterId);
+            return isCompleted;
+        }
 
 
     }
