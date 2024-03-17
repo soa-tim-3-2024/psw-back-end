@@ -10,6 +10,8 @@ using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Tours.Core.Domain;
 
 
 namespace Explorer.API.Controllers.Tourist
@@ -19,11 +21,13 @@ namespace Explorer.API.Controllers.Tourist
     public class ReviewController : BaseApiController
     {
         private readonly IReviewService _reviewService;
+        private readonly IUserService _userService;
         private static readonly HttpClient _sharedClient = new();
 
-        public ReviewController(IReviewService reviewService)
+        public ReviewController(IReviewService reviewService, IUserService userService)
         {
             _reviewService = reviewService;
+            _userService = userService;
         }
 
         //[Authorize(Policy = "nonAdministratorPolicy")]
@@ -87,6 +91,13 @@ namespace Explorer.API.Controllers.Tourist
         {
             var result = _reviewService.Delete(id);
             return CreateResponse(result);
+        }
+
+        [HttpGet("usernameById/{userId:int}")]
+        public ActionResult<String> GetCurrentUsername(long userId)
+        {
+            var user = _userService.Get(userId).Value;
+            return user.Username;
         }
     }
 }
