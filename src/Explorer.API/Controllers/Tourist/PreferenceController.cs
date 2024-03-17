@@ -67,7 +67,6 @@ namespace Explorer.API.Controllers.Tourist
             using HttpResponseMessage response = await httpClient.PostAsync(
                 "http://localhost:8081/preference",
                 jsonContent);
-            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var prefResponse = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
             return prefResponse;
         }
@@ -103,7 +102,6 @@ namespace Explorer.API.Controllers.Tourist
             using HttpResponseMessage response = await httpClient.PutAsync(
                 "http://localhost:8081/preference",
                 jsonContent);
-            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var prefResponse = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
             return prefResponse;
         }

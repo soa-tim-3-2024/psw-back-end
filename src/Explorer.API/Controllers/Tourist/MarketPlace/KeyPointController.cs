@@ -3,6 +3,9 @@ using Explorer.Tours.API.Public.TourAuthoring;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text;
 
 namespace Explorer.API.Controllers.Tourist.MarketPlace
 {
@@ -10,7 +13,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
     public class KeyPointController : BaseApiController
     {
         private readonly IKeyPointService _keyPointService;
-
+        private static readonly HttpClient _sharedClient = new();
         public KeyPointController(IKeyPointService keyPointService)
         {
             _keyPointService = keyPointService;
@@ -18,10 +21,10 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("tours/{tourId:long}/key-points")]
-        public ActionResult<KeyPointResponseDto> GetKeyPoints(long tourId)
+        public async Task<ActionResult<List<KeyPointResponseDto>>> GetKeyPoints(long tourId)
         {
-            var result = _keyPointService.GetByTourId(tourId);
-            return CreateResponse(result);
+            var keyPoints = await GetKeyPointsGo(_sharedClient, tourId);
+            return keyPoints;
         }
         [Authorize(Roles = "tourist")]
         [HttpGet("{campaignId:long}/key-points")]
@@ -37,6 +40,15 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         {
             var result = _keyPointService.GetFirstByTourId(tourId);
             return CreateResponse(result);
+        }
+
+        static async Task<List<KeyPointResponseDto>> GetKeyPointsGo(HttpClient httpClient, long tourId)
+        {
+            
+            using HttpResponseMessage response = await httpClient.GetAsync(
+                "http://localhost:8081/keyPoints/tour/"+tourId);
+            var keyPoints = await response.Content.ReadFromJsonAsync<List<KeyPointResponseDto>>();
+            return keyPoints;
         }
     }
 }

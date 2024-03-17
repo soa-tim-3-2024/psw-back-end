@@ -48,19 +48,41 @@ public class KeyPointController : BaseApiController
     }
     [Authorize(Roles = "author")]
     [HttpPut("tours/{tourId:long}/key-points/{id:long}")]
-    public ActionResult<KeyPointResponseDto> Update(long tourId, long id, [FromBody] KeyPointUpdateDto keyPoint)
+    public async Task<ActionResult<KeyPointResponseDto>> Update(long tourId, long id, [FromBody] KeyPointUpdateDto keyPoint)
     {
         keyPoint.Id = id;
-        var result = _keyPointService.Update(keyPoint);
-        return CreateResponse(result);
+        //var result = _keyPointService.Update(keyPoint);
+        //return CreateResponse(result);
+        var result = await UpdateKeyPointGo(_sharedClient, keyPoint);
+        return result;
+
+    }
+
+    static async Task<KeyPointResponseDto> UpdateKeyPointGo(HttpClient httpClient, KeyPointUpdateDto kp)
+    {
+        using StringContent jsonContent = new(
+            JsonSerializer.Serialize(kp),
+            Encoding.UTF8,
+            "application/json");
+        Console.WriteLine(jsonContent);
+
+        using HttpResponseMessage response = await httpClient.PutAsync(
+            "http://localhost:8081/keyPoints",
+            jsonContent);
+        Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+        var kpResponse = await response.Content.ReadFromJsonAsync<KeyPointResponseDto>();
+        return kpResponse;
     }
 
     [Authorize(Roles = "author, tourist")]
     [HttpDelete("tours/{tourId:long}/key-points/{id:long}")]
-    public ActionResult Delete(long tourId, long id)
+    public async Task<ActionResult> Delete(long tourId, long id)
     {
-        var result = _keyPointService.Delete(id);
-        return CreateResponse(result);
+        //var result = _keyPointService.Delete(id);
+        //return CreateResponse(result);
+        var response = await _sharedClient.DeleteAsync(
+               "http://localhost:8081/keyPoints/" + id);
+        return Ok(response.Content);
     }
 
     [Authorize(Roles = "author")]

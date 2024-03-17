@@ -10,6 +10,9 @@ using Explorer.Payments.Core.Domain;
 using Explorer.Payments.API.Dtos;
 using FluentResults;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -20,7 +23,7 @@ namespace Explorer.API.Controllers.Tourist
         private readonly ITourExecutionSessionService _tourExecutionService;
         private readonly ITourService _tourService;
         private readonly ITourTokenService _tourTokenService;
-
+        private static readonly HttpClient _sharedClient = new();
         public TourExecutionSessionController(ITourExecutionSessionService tourExecutionService, ITourService tourService, ITourTokenService tourTokenService)
         {
             _tourExecutionService = tourExecutionService;
@@ -30,15 +33,14 @@ namespace Explorer.API.Controllers.Tourist
 
         [HttpGet]
         [Route("purchasedtours")]
-        public ActionResult<PagedResult<TourResponseDto>> GetPurchasedTours()
+        public async Task<ActionResult<List<TourResponseDto>>> GetPurchasedTours()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId;
             touristId = long.Parse(identity.FindFirst("id").Value);
             var purchasedTourIds = _tourTokenService.GetTouristToursId(touristId).Value;
-            var result = _tourService.GetTours(purchasedTourIds);
-            var temp = CreateResponse(result);
-            return temp;
+            var result = await GetToursByIdGo(_sharedClient, purchasedTourIds);
+            return result;
         }
 
         [HttpGet("{tourId:long}")]
@@ -49,7 +51,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost]
-        public ActionResult<TourExecutionSessionResponseDto> StartTour(TourExecutionDto executionDto)
+        public async Task<ActionResult<TourExecutionSessionResponseDto>> StartTour(TourExecutionDto executionDto)
         {
             // treba provera da li je tura kupljena
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -63,13 +65,13 @@ namespace Explorer.API.Controllers.Tourist
             {
                 return Conflict();
             }
-            var result = _tourExecutionService.StartTour(executionDto.TourId, executionDto.IsCampaign, touristId);
-            return CreateResponse(result);
+            var result = await StartTourGo(_sharedClient, executionDto.TourId, touristId);
+            return result;
         }
 
         [HttpPut]
-        [Route("abandoning")]
-        public ActionResult<TourExecutionSessionResponseDto> AbandonTour(TourExecutionDto executionDto)
+        [Route("abandoning/{executionId}")]
+        public async Task<ActionResult<TourExecutionSessionResponseDto>> AbandonTour([FromBody]TourExecutionDto executionDto, long executionId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId;
@@ -78,17 +80,17 @@ namespace Explorer.API.Controllers.Tourist
             // za potrebe testiranja
             else
                 touristId = -21;
-            var result = _tourExecutionService.AbandonTour(executionDto.TourId, executionDto.IsCampaign, touristId);
+            var result = await AbandondTourGo(_sharedClient, executionId);
             if (result == null)
             {
                 return BadRequest();
             }
-            return CreateResponse(result);
+            return result;
         }
 
         [HttpPut]
         [Route("{tourId:long}/{isCampaign:bool}/keypoint")]
-        public ActionResult<TourExecutionSessionResponseDto> CompleteKeyPoint(long tourId, bool isCampaign, TouristPositionResponseDto touristPosition)
+        public async Task<ActionResult<TourExecutionSessionResponseDto>> CompleteKeyPoint(long tourId, bool isCampaign, TouristPositionResponseDto touristPosition)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId;
@@ -97,12 +99,12 @@ namespace Explorer.API.Controllers.Tourist
             // za potrebe testiranja
             else
                 touristId = -21;
-            var result = _tourExecutionService.CheckKeyPointCompletion(tourId, touristId, touristPosition.Longitude, touristPosition.Latitude, isCampaign);
+            var result = await CheckCompletititonGo(_sharedClient, tourId, touristId, touristPosition.Longitude, touristPosition.Latitude);
             if (result == null)
             {
                 return BadRequest();
             }
-            return CreateResponse(result);
+            return result;
         }
         [HttpGet]
         [Route("allInfo")]
@@ -131,5 +133,58 @@ namespace Explorer.API.Controllers.Tourist
             }
             return CreateResponse(result);
         }
+        static async Task<List<TourResponseDto>> GetToursByIdGo(HttpClient httpClient, List<long> Ids)
+        {
+            TourIdsDto IdsDto = new TourIdsDto();
+            IdsDto.Ids = Ids;
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(IdsDto),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await httpClient.PostAsync(
+                "http://localhost:8081/tours/tours-list",
+                jsonContent);
+            Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
+            var tours = await response.Content.ReadFromJsonAsync<List<TourResponseDto>>();
+            return tours;
+        }
+
+        static async Task<TourExecutionSessionResponseDto> StartTourGo(HttpClient httpClient, long tourId, long touristId)
+        {
+            var response = await httpClient.GetAsync(
+                "http://localhost:8081/tour-execution/"+tourId+"/"+touristId);
+            var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
+            return execution;
+        }
+
+        static async Task<TourExecutionSessionResponseDto> AbandondTourGo(HttpClient httpClient, long id)
+        {
+            var response = await httpClient.GetAsync(
+                "http://localhost:8081/tour-execution-abandoning/" + id);
+            var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
+            return execution;
+        }
+
+        static async Task<TourExecutionSessionResponseDto> CheckCompletititonGo(HttpClient httpClient, long tourId, long touristId, double longitude, double latitude)
+        {
+            CheckCompletitionDto completitionDto = new CheckCompletitionDto();
+            completitionDto.TourId = tourId;
+            completitionDto.TouristId = touristId;
+            completitionDto.Longitude = longitude;
+            completitionDto.Latitude = latitude;
+
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(completitionDto),
+                Encoding.UTF8,
+                "application/json");
+
+            var response = await httpClient.PostAsync(
+                "http://localhost:8081/tour-execution/check-completition",
+                jsonContent);
+            var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
+            return execution;
+        }
+
     }
 }

@@ -44,14 +44,14 @@ namespace Explorer.Payments.Core.UseCases
             {
                 var wallet = _walletService.GetForTourist(token.TouristId);
                 var shoppingCart = _shoppingCartRepository.GetByTouristId(token.TouristId);
-                var tour = _tourService.Get(token.TourId)?.Value;
+                //var tour = _tourService.Get(token.TourId)?.Value;
                 
                 if (wallet.Value.AdventureCoin >= totalPrice)
                 {
-                    if (tour == null || (TourStatus)tour.Status == TourStatus.Archived) //OVDE JE PRE PISALO TOURS.DOMAIN
+                   /* if (tour == null || (TourStatus)tour.Status == TourStatus.Archived) //OVDE JE PRE PISALO TOURS.DOMAIN
                     {
                         return Result.Fail(FailureCode.InvalidArgument);
-                    }
+                    }*/
 
                     if (_repository.GetAll().Find(tk => tk.TourId == token.TourId && tk.TouristId == token.TouristId) != null)
                     {
@@ -59,7 +59,7 @@ namespace Explorer.Payments.Core.UseCases
                     }
                     var newToken = _repository.Create(MapToDomain<TourTokenCreateDto>(token));
                     var newRecord = CreateRecord(token.TouristId, token.TourId, orderItemPrice);
-                    CreateNotfication(token.TouristId, token.TourId);
+                    //CreateNotfication(token.TouristId, token.TourId);
                     wallet.Value.AdventureCoin -= orderItemPrice;    //tu je snizena cijena!
                     _walletService.Update(new WalletUpdateDto(wallet.Value.Id,wallet.Value.AdventureCoin));
                     if (newRecord == null)
