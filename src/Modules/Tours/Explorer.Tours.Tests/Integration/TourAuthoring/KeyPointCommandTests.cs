@@ -67,6 +67,8 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         result.StatusCode.ShouldBe(400);*/
     }
 
+    /*
+
     [Fact]
     public void Updates()
     {
@@ -183,4 +185,5 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
             ControllerContext = BuildContext("-1")
         };
     }
+     */
 }

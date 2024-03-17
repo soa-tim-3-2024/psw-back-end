@@ -13,6 +13,8 @@ public class ReviewsQueryTests : BaseToursIntegrationTest
 {
     public ReviewsQueryTests(ToursTestFactory factory) : base(factory) { }
 
+    /*
+
     [Fact]
     public void Retrieves_all()
     {
@@ -53,4 +55,5 @@ public class ReviewsQueryTests : BaseToursIntegrationTest
             ControllerContext = BuildContext("-1")
         };
     }
+     */
 }

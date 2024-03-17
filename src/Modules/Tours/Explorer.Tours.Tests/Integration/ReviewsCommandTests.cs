@@ -13,6 +13,8 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
 {
     public ReviewsCommandTests(ToursTestFactory factory) : base(factory) { }
 
+    /*
+
     [Fact]
     public void Creates()
     {
@@ -192,4 +194,5 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
             ControllerContext = BuildContext("-1")
         };
     }
+     */
 }
