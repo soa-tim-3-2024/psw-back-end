@@ -83,7 +83,7 @@ public static class ToursStartup
 
         services.AddScoped<IInternalNotificationService, NotificationService>();
 
-        services.AddScoped<IMailingListScheduler, MailingListScheduler>();
+        //services.AddScoped<IMailingListScheduler, MailingListScheduler>();
      
         services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
         
