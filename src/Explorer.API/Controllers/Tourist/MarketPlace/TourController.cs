@@ -45,7 +45,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         static async Task<TourResponseDto> GetTourGo(HttpClient httpClient, long id)
         {
             var tour = await httpClient.GetFromJsonAsync<TourResponseDto>(
-                "http://localhost:8081/tour/" + id);
+                "http://host.docker.internal:8081/tour/" + id);
             return tour;
 
         }
@@ -56,7 +56,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
             long userId = extractUserIdFromHttpContext();
             //return _tourService.CanTourBeRated(tourId, userId).Value;
             var res = await _sharedClient.GetFromJsonAsync<bool>(
-                "http://localhost:8081/tour/canBeRated/" + tourId + "/" + userId);
+                "http://host.docker.internal:8081/tour/canBeRated/" + tourId + "/" + userId);
             return res;
         }
 
@@ -124,7 +124,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         static async Task<List<TourResponseDto>> GetPublishedToursGo(HttpClient httpClient)
         {
             var tours = await httpClient.GetFromJsonAsync<List<TourResponseDto>>(
-                "http://localhost:8081/tours/published/all");
+                "http://host.docker.internal:8081/tours/published/all");
             return tours;
         }
         static async Task<List<TourResponseDto>> GetToursByIdGo(HttpClient httpClient, List<long> Ids)
@@ -137,7 +137,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
                 "application/json");
             
             var response = await httpClient.PostAsync(
-                "http://localhost:8081/tours/tours-list",
+                "http://host.docker.internal:8081/tours/tours-list",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var tours = await response.Content.ReadFromJsonAsync<List<TourResponseDto>>();

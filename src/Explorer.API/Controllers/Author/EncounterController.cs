@@ -40,7 +40,7 @@ public class EncounterController : BaseApiController
         Console.WriteLine(jsonContent);
 
         using HttpResponseMessage response = await httpClient.PostAsync(
-            "http://localhost:8082/keyPoint/encounters",
+            "http://host.docker.internal:8082/keyPoint/encounters",
             jsonContent);
         Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
         var encounterResponse = await response.Content.ReadFromJsonAsync<KeyPointEncounterCreateDto>();

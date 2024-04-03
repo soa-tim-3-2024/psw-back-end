@@ -118,10 +118,27 @@ namespace Explorer.API.Controllers.Tourist
         public async Task<ActionResult<List<EncounterResponseDto>>> GetAllInRangeOf([FromBody] UserPositionWithRangeDto position, [FromQuery] int page, [FromQuery] int pageSize)
         {
             var client = _factory.CreateClient();
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //var identity = HttpContext.User.Identity as ClaimsIdentity;
             //var id = long.Parse(identity.FindFirst("id").Value);
-            var tours = await GetAllEncountersGo(client);
-            return tours;
+            //var tours = await GetAllEncountersGo(client);
+            //return tours;
+            var httpResponse = await client.GetAsync("http://host.docker.internal:8082/encounters/all/")
+
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                var response = await httpResponse.Content.ReadFromJsonAsync<EncounterResponseDto[]>();
+                return Ok(new List<EncounterResponseDto>(response.ToList()));
+            }
+            else
+            {
+                return new ContentResult
+                {
+                    StatusCode = (int)httpResponse.StatusCode,
+                    Content = await httpResponse.Content.ReadAsStringAsync(),
+                    ContentType = "text/plain"
+                };
+            }
+            
         }
 
 
@@ -186,7 +203,7 @@ namespace Explorer.API.Controllers.Tourist
         static async Task<GolangProgressDto> GetTouristProgressGo(HttpClient httpClient, long userId)
         {
             var progress = await httpClient.GetFromJsonAsync<GolangProgressDto>(
-                "http://localhost:8082/progress/" + userId);
+                "http://host.docker.internal:8082/progress/" + userId);
             Debug.WriteLine("test");
             return progress;
 
@@ -200,7 +217,7 @@ namespace Explorer.API.Controllers.Tourist
                 "application/json");
             Console.WriteLine(jsonContent);
             using HttpResponseMessage response = await httpClient.PostAsync(
-                "http://localhost:8082/encounters/activate/" + id,
+                "http://host.docker.internal:8082/encounters/activate/" + id,
                 jsonContent);
             if(response.IsSuccessStatusCode)
             {
@@ -216,7 +233,7 @@ namespace Explorer.API.Controllers.Tourist
         static async Task<ActionResult<EncounterResponseDto>> CancelGo(HttpClient httpClient, int userId, int encounterId)
         {
             using HttpResponseMessage response = await httpClient.GetAsync(
-               "http://localhost:8082/encounters/cancel/" + userId + "/" + encounterId);
+               "http://host.docker.internal:8082/encounters/cancel/" + userId + "/" + encounterId);
             var encounterResponse = await response.Content.ReadFromJsonAsync<EncounterResponseDto>();
             if(response.IsSuccessStatusCode)
             {
@@ -235,7 +252,7 @@ namespace Explorer.API.Controllers.Tourist
         static async Task<ActionResult<EncounterResponseDto>> CompleteGo(HttpClient httpClient, int userId, int encounterId)
         {
             using HttpResponseMessage response = await httpClient.GetAsync(
-               "http://localhost:8082/encounters/complete/" + userId + "/" + encounterId);
+               "http://host.docker.internal:8082/encounters/complete/" + userId + "/" + encounterId);
             if (response.IsSuccessStatusCode)
             {
                 var encounterResponse = await response.Content.ReadFromJsonAsync<EncounterResponseDto>();
@@ -254,21 +271,22 @@ namespace Explorer.API.Controllers.Tourist
         static async Task<List<EncounterResponseDto>> GetAllEncountersGo(HttpClient httpClient)
         {
             var encounters = await httpClient.GetFromJsonAsync<List<EncounterResponseDto>>(
-                "http://localhost:8082/encounters/all/");
+                "http://host.docker.internal:8082/encounters/all/");
             return encounters;
+
         }
 
         static async Task<List<EncounterResponseDto>> GetAllDoneByUserGo(HttpClient httpClient, int currentUserId)
         {
             var encounters = await httpClient.GetFromJsonAsync<List<EncounterResponseDto>>(
-                "http://localhost:8082/encounters/getCompletedByUser/" + currentUserId);
+                "http://host.docker.internal:8082/encounters/getCompletedByUser/" + currentUserId);
             return encounters;
         }
 
         static async Task<bool> GetInstanceGo(HttpClient httpClient, int userId, int encounterId)
         {
             var isCompleted = await httpClient.GetFromJsonAsync<bool>(
-                "http://localhost:8082/encounters/comleted/" + userId + "/" + encounterId);
+                "http://host.docker.internal:8082/encounters/comleted/" + userId + "/" + encounterId);
             return isCompleted;
         }
 

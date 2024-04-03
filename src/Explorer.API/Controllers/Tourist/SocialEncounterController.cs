@@ -42,7 +42,7 @@ namespace Explorer.API.Controllers.Tourist
             Debug.WriteLine("!!!");
             Debug.WriteLine("!!!");
             using HttpResponseMessage response = await httpClient.PostAsync(
-                "http://localhost:8082/social/encounters",
+                "http://host.docker.internal:8082/social/encounters",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var encounterResponse = await response.Content.ReadFromJsonAsync<SocialEncounterCreateDto>();

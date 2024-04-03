@@ -40,7 +40,7 @@ public class KeyPointController : BaseApiController
         Console.WriteLine(jsonContent);
 
         using HttpResponseMessage response = await httpClient.PostAsync(
-            "http://localhost:8081/keyPoints",
+            "http://host.docker.internal:8081/keyPoints",
             jsonContent);
         Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
         var kpResponse = await response.Content.ReadFromJsonAsync<KeyPointResponseDto>();
@@ -67,7 +67,7 @@ public class KeyPointController : BaseApiController
         Console.WriteLine(jsonContent);
 
         using HttpResponseMessage response = await httpClient.PutAsync(
-            "http://localhost:8081/keyPoints",
+            "http://host.docker.internal:8081/keyPoints",
             jsonContent);
         Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
         var kpResponse = await response.Content.ReadFromJsonAsync<KeyPointResponseDto>();
@@ -81,7 +81,7 @@ public class KeyPointController : BaseApiController
         //var result = _keyPointService.Delete(id);
         //return CreateResponse(result);
         var response = await _sharedClient.DeleteAsync(
-               "http://localhost:8081/keyPoints/" + id);
+               "http://host.docker.internal:8081/keyPoints/" + id);
         return Ok(response.Content);
     }
 
