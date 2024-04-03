@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  nase-migration:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: execute-migration
+    networks:
+      - databasepsw
+    environment:
+      DATABASE_HOST: databasepsw
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: super
+      DATABASE_SCHEMA: explorerv
+
+networks:
+  databasepsw:
+    name: databasepsw
+    driver: bridge
+    external: true

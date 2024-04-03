@@ -57,7 +57,7 @@ public class TouristPositionController : BaseApiController
         Console.WriteLine(jsonContent);
 
         using HttpResponseMessage response = await httpClient.PostAsync(
-            "http://localhost:8081/touristposition",
+            "http://host.docker.internal:8081/touristposition",
             jsonContent);;
         var positionResponse = await response.Content.ReadFromJsonAsync<TouristPositionResponseDto>();
         return positionResponse;
@@ -66,7 +66,7 @@ public class TouristPositionController : BaseApiController
     static async Task<TouristPositionResponseDto> GetTouristPositionGo(HttpClient httpClient, long touristId)
     {
         var position = await httpClient.GetFromJsonAsync<TouristPositionResponseDto>(
-            "http://localhost:8081/touristposition/" + touristId);
+            "http://host.docker.internal:8081/touristposition/" + touristId);
         return position;
 
     }
@@ -80,7 +80,7 @@ public class TouristPositionController : BaseApiController
         Console.WriteLine(jsonContent);
 
         using HttpResponseMessage response = await httpClient.PutAsync(
-            "http://localhost:8081/touristposition",
+            "http://host.docker.internal:8081/touristposition",
             jsonContent);
 
         var updatedPosition = await response.Content.ReadFromJsonAsync<TouristPositionResponseDto>();
