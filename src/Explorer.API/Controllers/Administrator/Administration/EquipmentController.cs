@@ -29,7 +29,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
             //var result = _equipmentService.GetPaged(page, pageSize);
             //return CreateResponse(result);
             var eqs = await _sharedClient.GetFromJsonAsync<List<EquipmentResponseDto>>(
-                "http://localhost:8081/equipment/all");
+                "http://host.docker.internal:8081/equipment/all");
             return eqs;
         }
 
@@ -51,7 +51,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PostAsync(
-                "http://localhost:8081/equipment",
+                "http://host.docker.internal:8081/equipment",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var eqResponse = await response.Content.ReadFromJsonAsync<EquipmentResponseDto>();
@@ -77,7 +77,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PutAsync(
-                "http://localhost:8081/equipment",
+                "http://host.docker.internal:8081/equipment",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var eqResponse = await response.Content.ReadFromJsonAsync<EquipmentResponseDto>();
@@ -89,7 +89,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
             //var result = _equipmentService.Delete(id);
             //return CreateResponse(result);
             var response = await _sharedClient.DeleteAsync(
-                "http://localhost:8081/equipment/" + id);
+                "http://host.docker.internal:8081/equipment/" + id);
             return Ok(response.Content);
         }
     }

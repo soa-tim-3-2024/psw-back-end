@@ -37,7 +37,7 @@ namespace Explorer.API.Controllers.Tourist
             //var result = _reviewService.GetPagedByTourId(page, pageSize, tourId);
             //return CreateResponse(result);
             var tours = await _sharedClient.GetFromJsonAsync<List<ReviewResponseDto>>(
-                "http://localhost:8081/reviews/" + tourId);
+                "http://host.docker.internal:8081/reviews/" + tourId);
             return tours;
         }
 
@@ -66,7 +66,7 @@ namespace Explorer.API.Controllers.Tourist
                Encoding.UTF8,
                "application/json");
             var res = await _sharedClient.PostAsync(
-                "http://localhost:8081/review", jsonContent);
+                "http://host.docker.internal:8081/review", jsonContent);
             var resFinal = await res.Content.ReadFromJsonAsync<ReviewResponseDto>();
             return resFinal;
         }

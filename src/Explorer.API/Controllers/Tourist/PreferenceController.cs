@@ -41,7 +41,7 @@ namespace Explorer.API.Controllers.Tourist
         static async Task<PreferenceResponseDto> GetPrefGo(HttpClient httpClient, long id)
         {
             var pref = await httpClient.GetFromJsonAsync<PreferenceResponseDto>(
-                "http://localhost:8081/preference/" + id);
+                "http://host.docker.internal:8081/preference/" + id);
             return pref;
 
         }
@@ -65,7 +65,7 @@ namespace Explorer.API.Controllers.Tourist
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PostAsync(
-                "http://localhost:8081/preference",
+                "http://host.docker.internal:8081/preference",
                 jsonContent);
             var prefResponse = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
             return prefResponse;
@@ -77,7 +77,7 @@ namespace Explorer.API.Controllers.Tourist
             //var result = _tourPreferencesService.Delete(id);
             //return CreateResponse(result);
             var response = await _sharedClient.DeleteAsync(
-                "http://localhost:8081/preference/" + id);
+                "http://host.docker.internal:8081/preference/" + id);
             return Ok(response.Content);
         }
 
@@ -100,7 +100,7 @@ namespace Explorer.API.Controllers.Tourist
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PutAsync(
-                "http://localhost:8081/preference",
+                "http://host.docker.internal:8081/preference",
                 jsonContent);
             var prefResponse = await response.Content.ReadFromJsonAsync<PreferenceResponseDto>();
             return prefResponse;

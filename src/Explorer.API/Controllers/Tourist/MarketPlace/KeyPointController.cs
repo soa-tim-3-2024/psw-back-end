@@ -46,7 +46,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         {
             
             using HttpResponseMessage response = await httpClient.GetAsync(
-                "http://localhost:8081/keyPoints/tour/"+tourId);
+                "http://host.docker.internal:8081/keyPoints/tour/" + tourId);
             var keyPoints = await response.Content.ReadFromJsonAsync<List<KeyPointResponseDto>>();
             return keyPoints;
         }
