@@ -9,6 +9,7 @@ using System.Text;
 using System.Diagnostics;
 using FluentResults;
 using Explorer.Tours.Core.Domain.Tours;
+using System.Net.Http;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
@@ -47,10 +48,27 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
-            /*var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
-            return CreateResponse(result);*/
-            var tours = await GetAuthorsToursGo(_sharedClient, id);
-            return tours;
+            //var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
+            //return CreateResponse(result);*/
+            //var tours = await GetAuthorsToursGo(_sharedClient, id);
+            //return tours;
+            var httpResponse = await _sharedClient.GetAsync("http://host.docker.internal:8081/tours/" + id);
+
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                var response = await httpResponse.Content.ReadFromJsonAsync<TourResponseDto[]>();
+                return Ok(new List<TourResponseDto>(response.ToList()));
+            }
+            else
+            {
+                var resp = new ContentResult
+                {
+                    StatusCode = (int)httpResponse.StatusCode,
+                    Content = await httpResponse.Content.ReadAsStringAsync(),
+                    ContentType = "text/plain"
+                };
+                return resp;
+            }
         }
 
         [Authorize(Roles = "author, tourist")]
@@ -208,9 +226,10 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         }
         static async Task<List<TourResponseDto>> GetAuthorsToursGo(HttpClient httpClient, long authorId)
         {
-            var tours = await httpClient.GetFromJsonAsync<List<TourResponseDto>>(
+            var tours = await httpClient.GetFromJsonAsync<TourResponseDto[]>(
                 "http://host.docker.internal:8081/tours/" + authorId);
-            return tours;
+            return tours.ToList();
+           
 
         }
         static async Task<TourResponseDto> UpdateTourGo(HttpClient httpClient, TourUpdateDto tour)
