@@ -122,7 +122,7 @@ namespace Explorer.API.Controllers.Tourist
             //var id = long.Parse(identity.FindFirst("id").Value);
             //var tours = await GetAllEncountersGo(client);
             //return tours;
-            var httpResponse = await client.GetAsync("http://host.docker.internal:8082/encounters/all/")
+            var httpResponse = await client.GetAsync("http://host.docker.internal:8082/encounters/all/");
 
             if (httpResponse.IsSuccessStatusCode)
             {
