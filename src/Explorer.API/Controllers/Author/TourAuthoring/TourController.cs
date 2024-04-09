@@ -229,8 +229,6 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var tours = await httpClient.GetFromJsonAsync<TourResponseDto[]>(
                 "http://host.docker.internal:8081/tours/" + authorId);
             return tours.ToList();
-           
-
         }
         static async Task<TourResponseDto> UpdateTourGo(HttpClient httpClient, TourUpdateDto tour)
         {

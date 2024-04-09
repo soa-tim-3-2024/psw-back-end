@@ -3,10 +3,15 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text;
+using Explorer.Tours.Core.Domain.Tours;
+using System.Net.Http;
 
 namespace Explorer.API.Controllers
 {
@@ -16,6 +21,7 @@ namespace Explorer.API.Controllers
     {
         private readonly IFollowerService _followerService;
         private readonly IUserService _userService;
+        private static readonly HttpClient _sharedClient = new();
         public FollowerController(IFollowerService followerService, IUserService userService)
         {
             _followerService = followerService;
@@ -47,6 +53,14 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+        [HttpGet("user-followings/{id}")]
+        public async Task<ActionResult<List<FollowingResponseDto>>> GetUserFollowings(string id)
+        {
+            var followings = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
+                "http://localhost:8089/user-followings/" + id);
+            return followings.ToList();
+        }
+
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
         {
@@ -61,6 +75,13 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+        [HttpPost("create")]
+        public async Task<ActionResult<FollowerResponseDto>> CreateNewFollowing([FromBody] NewFollowingDto following)
+        {
+            var res = await CreateFollowingGo(_sharedClient, following);
+            return res;
+        }
+
         [HttpGet("search/{searchUsername}")]
         public ActionResult<PagedResult<UserResponseDto>> GetSearch([FromQuery] int page, [FromQuery] int pageSize, string searchUsername)
         {
@@ -72,6 +93,21 @@ namespace Explorer.API.Controllers
             }
             var result = _userService.SearchUsers(0, 0, searchUsername, userId);
             return CreateResponse(result);
+        }
+        static async Task<FollowerResponseDto> CreateFollowingGo(HttpClient httpClient, NewFollowingDto following)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(following),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PostAsync(
+                "http://localhost:8089/following",
+                jsonContent);
+
+            var res = await response.Content.ReadFromJsonAsync<FollowerResponseDto>();
+            return res;
         }
     }
 
