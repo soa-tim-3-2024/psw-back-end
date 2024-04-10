@@ -61,6 +61,15 @@ namespace Explorer.API.Controllers
             return followings.ToList();
         }
 
+        [HttpGet("user-followers/{id}")]
+        public async Task<ActionResult<List<FollowingResponseDto>>> GetUserFollowers(string id)
+        {
+            var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
+                "http://localhost:8089/user-followers/" + id);
+            return followers.ToList();
+        }
+
+
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
         {
@@ -79,6 +88,13 @@ namespace Explorer.API.Controllers
         public async Task<ActionResult<FollowerResponseDto>> CreateNewFollowing([FromBody] NewFollowingDto following)
         {
             var res = await CreateFollowingGo(_sharedClient, following);
+            return res;
+        }
+
+        [HttpPut("unfollow")]
+        public async Task<ActionResult<FollowerResponseDto>> UnfollowUser([FromBody] UnfollowUserDto unfollow)
+        {
+            var res = await UnfollowUserGo(_sharedClient, unfollow);
             return res;
         }
 
@@ -104,6 +120,21 @@ namespace Explorer.API.Controllers
 
             using HttpResponseMessage response = await httpClient.PostAsync(
                 "http://localhost:8089/following",
+                jsonContent);
+
+            var res = await response.Content.ReadFromJsonAsync<FollowerResponseDto>();
+            return res;
+        }
+        static async Task<FollowerResponseDto> UnfollowUserGo(HttpClient httpClient, UnfollowUserDto unfollow)
+        {
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(unfollow),
+                Encoding.UTF8,
+                "application/json");
+            Console.WriteLine(jsonContent);
+
+            using HttpResponseMessage response = await httpClient.PutAsync(
+                "http://localhost:8089/unfollow",
                 jsonContent);
 
             var res = await response.Content.ReadFromJsonAsync<FollowerResponseDto>();
