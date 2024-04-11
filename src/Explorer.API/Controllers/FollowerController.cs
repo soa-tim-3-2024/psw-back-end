@@ -1,17 +1,11 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Text;
-using Explorer.Tours.Core.Domain.Tours;
-using System.Net.Http;
+using System.Text.Json;
 
 namespace Explorer.API.Controllers
 {
@@ -66,6 +60,14 @@ namespace Explorer.API.Controllers
         {
             var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
                 "http://localhost:8089/user-followers/" + id);
+            return followers.ToList();
+        }
+
+        [HttpGet("/user-recommendations/{id}")]
+        public async Task<ActionResult<List<FollowingResponseDto>>> GetUserRecommendations(string id)
+        {
+            var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
+                "http://localhost:8089/user-recommendations/" + id);
             return followers.ToList();
         }
 
