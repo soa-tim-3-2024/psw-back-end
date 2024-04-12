@@ -51,7 +51,7 @@ namespace Explorer.API.Controllers
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserFollowings(string id)
         {
             var followings = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
-                "http://localhost:8089/user-followings/" + id);
+                "http://host.docker.internal:8089/user-followings/" + id);
             return followings.ToList();
         }
 
@@ -59,7 +59,7 @@ namespace Explorer.API.Controllers
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserFollowers(string id)
         {
             var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
-                "http://localhost:8089/user-followers/" + id);
+                "http://host.docker.internal:8089/user-followers/" + id);
             return followers.ToList();
         }
 
@@ -67,7 +67,7 @@ namespace Explorer.API.Controllers
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserRecommendations(string id)
         {
             var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
-                "http://localhost:8089/user-recommendations/" + id);
+                "http://host.docker.internal:8089/user-recommendations/" + id);
             return followers.ToList();
         }
 
