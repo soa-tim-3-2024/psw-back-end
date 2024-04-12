@@ -63,7 +63,7 @@ namespace Explorer.API.Controllers
             return followers.ToList();
         }
 
-        [HttpGet("/user-recommendations/{id}")]
+        [HttpGet("user-recommendations/{id}")]
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserRecommendations(string id)
         {
             var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
