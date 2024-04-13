@@ -121,7 +121,7 @@ namespace Explorer.API.Controllers
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PostAsync(
-                "http://localhost:8089/following",
+                "http://host.docker.internal:8089/following",
                 jsonContent);
 
             var res = await response.Content.ReadFromJsonAsync<FollowerResponseDto>();
@@ -136,7 +136,7 @@ namespace Explorer.API.Controllers
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PutAsync(
-                "http://localhost:8089/unfollow",
+                "http://host.docker.internal:8089/unfollow",
                 jsonContent);
 
             var res = await response.Content.ReadFromJsonAsync<FollowerResponseDto>();
