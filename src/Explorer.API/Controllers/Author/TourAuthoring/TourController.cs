@@ -52,8 +52,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             //return CreateResponse(result);*/
             //var tours = await GetAuthorsToursGo(_sharedClient, id);
             //return tours;
-            var httpResponse = await _sharedClient.GetAsync("http://host.docker.internal:
-                /tours/" + id);
+            var httpResponse = await _sharedClient.GetAsync("http://host.docker.internal:8083/tours/" + id);
 
             if (httpResponse.IsSuccessStatusCode)
             {
