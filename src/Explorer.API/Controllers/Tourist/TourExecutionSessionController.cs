@@ -143,7 +143,7 @@ namespace Explorer.API.Controllers.Tourist
                 "application/json");
 
             var response = await httpClient.PostAsync(
-                "http://host.docker.internal:8081/tours/tours-list",
+                "http://host.docker.internal:8083/tours/tours-list",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var tours = await response.Content.ReadFromJsonAsync<List<TourResponseDto>>();
@@ -153,7 +153,7 @@ namespace Explorer.API.Controllers.Tourist
         static async Task<TourExecutionSessionResponseDto> StartTourGo(HttpClient httpClient, long tourId, long touristId)
         {
             var response = await httpClient.GetAsync(
-                "http://host.docker.internal:8081/tour-execution/" + tourId+"/"+touristId);
+                "http://host.docker.internal:8083/tour-execution/" + tourId+"/"+touristId);
             var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
             return execution;
         }
@@ -161,7 +161,7 @@ namespace Explorer.API.Controllers.Tourist
         static async Task<TourExecutionSessionResponseDto> AbandondTourGo(HttpClient httpClient, long id)
         {
             var response = await httpClient.GetAsync(
-                "http://host.docker.internal:8081/tour-execution-abandoning/" + id);
+                "http://host.docker.internal:8083/tour-execution-abandoning/" + id);
             var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
             return execution;
         }
@@ -180,7 +180,7 @@ namespace Explorer.API.Controllers.Tourist
                 "application/json");
 
             var response = await httpClient.PostAsync(
-                "http://host.docker.internal:8081/tour-execution/check-completition",
+                "http://host.docker.internal:8083/tour-execution/check-completition",
                 jsonContent);
             var execution = await response.Content.ReadFromJsonAsync<TourExecutionSessionResponseDto>();
             return execution;

@@ -24,7 +24,7 @@ namespace Explorer.API.Controllers.Author
             //var result = _equipmentService.GetPaged(page, pageSize);
             //return CreateResponse(result);
             var pref = await _sharedClient.GetFromJsonAsync<List<EquipmentResponseDto>>(
-                "http://host.docker.internal:8081/equipment/all");
+                "http://host.docker.internal:8083/equipment/all");
             return pref;
         }
     }

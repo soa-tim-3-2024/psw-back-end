@@ -52,7 +52,8 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             //return CreateResponse(result);*/
             //var tours = await GetAuthorsToursGo(_sharedClient, id);
             //return tours;
-            var httpResponse = await _sharedClient.GetAsync("http://host.docker.internal:8081/tours/" + id);
+            var httpResponse = await _sharedClient.GetAsync("http://host.docker.internal:
+                /tours/" + id);
 
             if (httpResponse.IsSuccessStatusCode)
             {
@@ -117,7 +118,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             //var result = _tourService.GetEquipment(tourId);
             //return CreateResponse(result);
             var eq = await _sharedClient.GetFromJsonAsync<List<EquipmentResponseDto>>(
-                "http://host.docker.internal:8081/equipment/tour/" + tourId);
+                "http://host.docker.internal:8083/equipment/tour/" + tourId);
             return eq;
         }
 
@@ -128,7 +129,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             //var result = _tourService.AddEquipment(tourId, equipmentId);
             //return CreateResponse(result);
             var eq = await _sharedClient.PostAsync(
-                "http://host.docker.internal:8081/equipment/" + equipmentId +"/"+ tourId, null);
+                "http://host.docker.internal:8083/equipment/" + equipmentId +"/"+ tourId, null);
             if(eq != null)
             {
                 return Ok(eq);
@@ -144,7 +145,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             //var result = _tourService.DeleteEquipment(tourId, equipmentId);
             //return CreateResponse(result);
             var eq = await _sharedClient.DeleteAsync(
-                "http://host.docker.internal:8081/equipment/" + equipmentId + "/" + tourId);
+                "http://host.docker.internal:8083/equipment/" + equipmentId + "/" + tourId);
             if (eq != null)
             {
                 return Ok(eq);
@@ -218,7 +219,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PostAsync(
-                "http://host.docker.internal:8081/tours",
+                "http://host.docker.internal:8083/tours",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             var tourResponse = await response.Content.ReadFromJsonAsync<TourResponseDto>();
@@ -227,7 +228,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         static async Task<List<TourResponseDto>> GetAuthorsToursGo(HttpClient httpClient, long authorId)
         {
             var tours = await httpClient.GetFromJsonAsync<TourResponseDto[]>(
-                "http://host.docker.internal:8081/tours/" + authorId);
+                "http://host.docker.internal:8083/tours/" + authorId);
             return tours.ToList();
         }
         static async Task<TourResponseDto> UpdateTourGo(HttpClient httpClient, TourUpdateDto tour)
@@ -239,7 +240,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PutAsync(
-                "http://host.docker.internal:8081/tours",
+                "http://host.docker.internal:8083/tours",
                 jsonContent);
 
             var updatedTour = await response.Content.ReadFromJsonAsync<TourResponseDto>();
@@ -254,7 +255,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PutAsync(
-                "http://host.docker.internal:8081/tours/publish",
+                "http://host.docker.internal:8083/tours/publish",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             return 1;
@@ -269,7 +270,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             Console.WriteLine(jsonContent);
 
             using HttpResponseMessage response = await httpClient.PutAsync(
-                "http://host.docker.internal:8081/tours/archive",
+                "http://host.docker.internal:8083/tours/archive",
                 jsonContent);
             Debug.WriteLine(jsonContent.ReadAsStringAsync().Result);
             return 1;
