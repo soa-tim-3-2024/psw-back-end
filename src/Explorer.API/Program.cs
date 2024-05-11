@@ -1,3 +1,4 @@
+using Explorer.API.Controllers.Proto;
 using Explorer.API.Startup;
 using Explorer.Tours.Core.UseCases;
 
@@ -11,13 +12,14 @@ builder.Services.ConfigureCors(corsPolicy);
 builder.Services.ConfigureAuth();
 builder.Services.AddHttpClient();
 builder.Services.RegisterModules();
+builder.Services.AddGrpc().AddJsonTranscoding();
 
 var app = builder.Build();
 
 //if (app.Environment.IsDevelopment())
 //{
-    //app.UseDeveloperExceptionPage();
-    app.UseSwagger();
+//app.UseDeveloperExceptionPage();
+app.UseSwagger();
     app.UseSwaggerUI();
 //}
 //else
@@ -34,6 +36,7 @@ app.UseAuthorization();
 app.UseStaticFiles();
 
 app.MapControllers();
+app.MapGrpcService<ToursProtoController>();
 
 app.Run();
 

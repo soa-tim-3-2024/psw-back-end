@@ -25,13 +25,13 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
             _shoppingCartService = shoppingCartService;
         }
 
-        [Authorize(Roles = "author, tourist")]
-        [HttpGet("tours/published")]
-        public async Task<ActionResult<List<TourResponseDto>>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
-        {
-            var tours = await GetPublishedToursGo(_sharedClient);
-            return tours;
-        }
+        //[Authorize(Roles = "author, tourist")]
+        //[HttpGet("tours/published")]
+        //public async Task<ActionResult<List<TourResponseDto>>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
+        //{
+        //    var tours = await GetPublishedToursGo(_sharedClient);
+        //    return tours;
+        //}
 
         [HttpGet("tours/{tourId:long}")]
         public async Task<ActionResult<TourResponseDto>> GetByIdAsync(long tourId)
