@@ -33,7 +33,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         //    return tours;
         //}
 
-        [HttpGet("tours/{tourId:long}")]
+        /*[HttpGet("tours/{tourId:long}")]
         public async Task<ActionResult<TourResponseDto>> GetByIdAsync(long tourId)
         {
             //var result = _tourService.GetById(tourId);
@@ -41,7 +41,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
             var tour = await GetTourGo(_sharedClient, tourId);
             return tour;
         }
-
+        */
         static async Task<TourResponseDto> GetTourGo(HttpClient httpClient, long id)
         {
             var tour = await httpClient.GetFromJsonAsync<TourResponseDto>(

@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcServiceTranscoding";
+import "Protos/google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service AuthoringKeyPoint {
+  rpc CreateKeyPoint (KeyPointCreate) returns (KeyPoint) {
+    option (google.api.http) = {
+      post: "/api/tour-authoring/key-point",
+      body: "*"
+    };
+  }
+  rpc UpdateKeyPoint (KeyPointUpdate) returns (KeyPoint) {
+    option (google.api.http) = {
+      put: "/api/tour-authoring/key-point",
+      body: "*"
+    };
+  }
+  rpc DeleteKeyPoint (KeyPointId) returns (KeyPoint) {
+    option (google.api.http) = {
+      delete: "/api/tour-authoring/key-point/{keyPointId}"
+    };
+  }
+}
+
+message KeyPointId{
+    int64 keyPointId = 1;
+}
+
+message KeyPoint {
+    int64 id = 1;
+    int64 tourId = 2;
+    string name = 3;
+    string description = 4;
+    double longitude = 5;
+    double latitude = 6;
+    string locationAddress = 7;
+    string imagePath = 8;
+    int64 order = 9;
+}
+
+message KeyPointCreate {
+    int64 tourId = 1;
+    string name = 2;
+    string description = 3;
+    double longitude = 4;
+    double latitude = 5;
+    string locationAddress = 6;
+    string ImagePath = 7;
+    int64 order = 8;
+    bool isEncounterRequired = 9;
+    bool hasEncounter = 10;
+}
+
+message KeyPointUpdate {
+    int64 id = 1;
+    int64 tourId = 2;
+    string name = 3;
+    string description = 4;
+    double longitude = 5;
+    double latitude = 6;
+    string locationAddress = 7;
+    string ImagePath = 8;
+    int64 order = 9;
+}

@@ -4,47 +4,46 @@ using GrpcServiceTranscoding;
 
 namespace Explorer.API.Controllers.Proto
 {
-    public class ToursProtoController : MarketplaceTour.MarketplaceTourBase
+    public class KeyPointProtoController : AuthoringKeyPoint.AuthoringKeyPointBase
     {
-        private readonly ILogger<ToursProtoController> _logger;
+        private readonly ILogger<KeyPointProtoController> _logger;
 
-        public ToursProtoController(ILogger<ToursProtoController> logger)
+        public KeyPointProtoController(ILogger<KeyPointProtoController> logger)
         {
             _logger = logger;
         }
 
-        public override async Task<TourResponseList> GetPublishedTours(Page request, ServerCallContext context)
+        public override async Task<KeyPoint> CreateKeyPoint(KeyPointCreate request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
             var channel = GrpcChannel.ForAddress("http://localhost:8083", new GrpcChannelOptions { HttpHandler = httpHandler });
 
-            var client = new MarketplaceTour.MarketplaceTourClient(channel);
-            var response = await client.GetPublishedToursAsync(request);
-            
+            var client = new AuthoringKeyPoint.AuthoringKeyPointClient(channel);
+            var response = await client.CreateKeyPointAsync(request);
+
+            return await Task.FromResult(response);
+        }
+        public override async Task<KeyPoint> UpdateKeyPoint(KeyPointUpdate request, ServerCallContext context)
+        {
+            var httpHandler = new HttpClientHandler();
+            httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+            var channel = GrpcChannel.ForAddress("http://localhost:8083", new GrpcChannelOptions { HttpHandler = httpHandler });
+
+            var client = new AuthoringKeyPoint.AuthoringKeyPointClient(channel);
+            var response = await client.UpdateKeyPointAsync(request);
+
             return await Task.FromResult(response);
         }
 
-        public override async Task<TourResponseList> GetAuthorTours(AuthorId request, ServerCallContext context)
+        public override async Task<KeyPoint> DeleteKeyPoint(KeyPointId request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
             var channel = GrpcChannel.ForAddress("http://localhost:8083", new GrpcChannelOptions { HttpHandler = httpHandler });
 
-            var client = new MarketplaceTour.MarketplaceTourClient(channel);
-            var response = await client.GetAuthorToursAsync(request);
-            
-            return await Task.FromResult(response);
-        }
-
-        public override async Task<TourResponse> GetTour(TourId request, ServerCallContext context)
-        {
-            var httpHandler = new HttpClientHandler();
-            httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            var channel = GrpcChannel.ForAddress("http://localhost:8083", new GrpcChannelOptions { HttpHandler = httpHandler });
-
-            var client = new MarketplaceTour.MarketplaceTourClient(channel);
-            var response = await client.GetTourAsync(request);
+            var client = new AuthoringKeyPoint.AuthoringKeyPointClient(channel);
+            var response = await client.DeleteKeyPointAsync(request);
 
             return await Task.FromResult(response);
         }

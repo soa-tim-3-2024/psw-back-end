@@ -50,6 +50,8 @@
 
 	<ItemGroup>
 		<Protobuf Include="Protos\tour.proto" />
+		<Protobuf Include="Protos\authoring.proto" />
+		<Protobuf Include="Protos\keyPoint.proto" />
 	</ItemGroup>
 
 	

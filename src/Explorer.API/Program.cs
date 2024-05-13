@@ -37,6 +37,8 @@ app.UseStaticFiles();
 
 app.MapControllers();
 app.MapGrpcService<ToursProtoController>();
+app.MapGrpcService<TourAuthoringProtoController>();
+app.MapGrpcService<KeyPointProtoController>();
 
 app.Run();
 

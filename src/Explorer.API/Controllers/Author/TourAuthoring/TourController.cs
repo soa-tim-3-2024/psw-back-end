@@ -70,7 +70,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 return resp;
             }
         }
-
+/*
         [Authorize(Roles = "author, tourist")]
         [HttpPost]
         public async Task<ActionResult<TourResponseDto>> Create([FromBody] TourCreateDto tour)
@@ -81,12 +81,12 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
             /*var result = _tourService.Create(tour);
-            return CreateResponse(result);*/
+            return CreateResponse(result);
             var tourResponse = await CreateTourGo(_sharedClient, tour);
             return tourResponse;
         }
-
-        [Authorize(Roles = "author, tourist")]
+*/
+    /*    [Authorize(Roles = "author, tourist")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<TourResponseDto>> Update([FromBody] TourUpdateDto tour)
         {
@@ -97,11 +97,11 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             }
             /*var result = _tourService.Update(tour);
             return CreateResponse(result);
-            */
+            
             var tourResponse = await UpdateTourGo(_sharedClient, tour);
             return tourResponse;
         }
-
+    */
         [Authorize(Roles = "author, tourist")]
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
