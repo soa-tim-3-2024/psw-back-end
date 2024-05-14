@@ -1,13 +1,8 @@
 ﻿using Explorer.Payments.API.Public;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Explorer.API.Controllers;
 
@@ -27,19 +22,20 @@ public class AuthenticationController : BaseApiController
     public ActionResult<RegistrationConfirmationTokenDto> RegisterTourist([FromBody] AccountRegistrationDto account)
     {
         var result = _authenticationService.RegisterTourist(account);
-        if(result.IsSuccess && !result.IsFailed)
+        if (result.IsSuccess && !result.IsFailed)
         {
             _walletService.Create(new Payments.API.Dtos.WalletCreateDto(result.Value.Id));
         }
         return CreateResponse(result);
     }
 
+    /*
     [HttpPost("login")]
     public ActionResult<AuthenticationTokensDto> Login([FromBody] CredentialsDto credentials)
     {
         var result = _authenticationService.Login(credentials);
         return CreateResponse(result);
-    }
+    }*/
 
     [HttpPost("reset-password")]
     public ActionResult<ResetPasswordTokenDto> GenerateResetPasswordLink([FromBody] ResetPasswordEmailDto resetPasswordEmail)

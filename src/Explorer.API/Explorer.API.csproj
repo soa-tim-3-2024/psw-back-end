@@ -52,6 +52,8 @@
 		<Protobuf Include="Protos\tour.proto" />
 		<Protobuf Include="Protos\authoring.proto" />
 		<Protobuf Include="Protos\keyPoint.proto" />
+		<Protobuf Include="Protos\follower.proto" />
+		<Protobuf Include="Protos\authentication.proto" />
 	</ItemGroup>
 
 	
