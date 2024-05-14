@@ -37,6 +37,7 @@ app.UseStaticFiles();
 
 app.MapControllers();
 app.MapGrpcService<ToursProtoController>();
+app.MapGrpcService<FollowerProtoController>();
 
 app.Run();
 

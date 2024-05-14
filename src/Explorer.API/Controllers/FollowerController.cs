@@ -47,7 +47,7 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpGet("user-followings/{id}")]
+        //[HttpGet("user-followings/{id}")]
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserFollowings(string id)
         {
             var followings = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
@@ -55,7 +55,7 @@ namespace Explorer.API.Controllers
             return followings.ToList();
         }
 
-        [HttpGet("user-followers/{id}")]
+        //[HttpGet("user-followers/{id}")]
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserFollowers(string id)
         {
             var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
@@ -63,7 +63,7 @@ namespace Explorer.API.Controllers
             return followers.ToList();
         }
 
-        [HttpGet("user-recommendations/{id}")]
+        //[HttpGet("user-recommendations/{id}")]
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserRecommendations(string id)
         {
             var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
@@ -86,14 +86,14 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpPost("create")]
+        //[HttpPost("create")]
         public async Task<ActionResult<FollowerResponseDto>> CreateNewFollowing([FromBody] NewFollowingDto following)
         {
             var res = await CreateFollowingGo(_sharedClient, following);
             return res;
         }
 
-        [HttpPut("unfollow")]
+        //[HttpPut("unfollow")]
         public async Task<ActionResult<FollowerResponseDto>> UnfollowUser([FromBody] UnfollowUserDto unfollow)
         {
             var res = await UnfollowUserGo(_sharedClient, unfollow);

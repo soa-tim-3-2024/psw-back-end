@@ -21,28 +21,8 @@ namespace Explorer.API.Controllers.Proto
 
             var client = new MarketplaceTour.MarketplaceTourClient(channel);
             var response = await client.GetPublishedToursAsync(request);
-            Console.WriteLine(response.ToString());
-            Console.WriteLine(response.Id);
 
-            return await Task.FromResult(new TourResponse
-            {
-                Id = response.Id,
-                ArchiveDate = response.ArchiveDate,
-                AuthorId = response.AuthorId,
-                AverageRating = response.AverageRating,
-                Category = response.Category,
-                Description =response.Description,
-                Difficulty=response.Difficulty,
-                Distance=response.Distance,
-                //Durations=response.Durations,
-                IsDeleted=response.IsDeleted,
-                //KeyPoints =response.KeyPoints,
-                Name=response.Name,
-                Price=response.Price,
-                PublishDate=response.PublishDate,
-                Status = response.Status,
-                //Tags = response.Tags,
-            });
+            return await Task.FromResult(new TourResponse(response));
         }
 
     }
