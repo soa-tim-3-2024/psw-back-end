@@ -1,6 +1,5 @@
 using Explorer.API.Controllers.Proto;
 using Explorer.API.Startup;
-using Explorer.Tours.Core.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +19,7 @@ var app = builder.Build();
 //{
 //app.UseDeveloperExceptionPage();
 app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwaggerUI();
 //}
 //else
 //{
@@ -38,6 +37,7 @@ app.UseStaticFiles();
 app.MapControllers();
 app.MapGrpcService<ToursProtoController>();
 app.MapGrpcService<FollowerProtoController>();
+app.MapGrpcService<AuthenticationProtoController>();
 
 app.Run();
 
