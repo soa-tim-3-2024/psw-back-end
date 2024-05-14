@@ -1,6 +1,5 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
-using GrpcServiceTranscoding;
 using GrpcServiceTranscodingFol;
 
 namespace Explorer.API.Controllers.Proto
@@ -13,6 +12,7 @@ namespace Explorer.API.Controllers.Proto
         {
             _logger = logger;
         }
+
 
         public override async Task<ListFollowingResponse> GetUserFollowings(Identificator request, ServerCallContext context)
         {

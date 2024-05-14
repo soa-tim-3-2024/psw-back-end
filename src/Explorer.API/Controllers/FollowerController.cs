@@ -1,11 +1,6 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
+﻿using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
 
 namespace Explorer.API.Controllers
 {
@@ -21,6 +16,8 @@ namespace Explorer.API.Controllers
             _followerService = followerService;
             _userService = userService;
         }
+
+        /*
 
         [HttpGet("followers/{id:long}")]
         public ActionResult<PagedResult<FollowerResponseWithUserDto>> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
@@ -142,6 +139,8 @@ namespace Explorer.API.Controllers
             var res = await response.Content.ReadFromJsonAsync<FollowerResponseDto>();
             return res;
         }
+
+        */
     }
 
 }

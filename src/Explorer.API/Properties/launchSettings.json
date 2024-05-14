@@ -10,6 +10,19 @@
     }
   },
   "profiles": {
+
+
+    "WebApplication1": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:44333;http://localhost:51713/",
+      "sslPort": 44333
+    },
+
+
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
