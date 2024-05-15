@@ -21,7 +21,7 @@ namespace Explorer.API.Controllers
             _followerService = followerService;
             _userService = userService;
         }
-
+        /*
         [HttpGet("followers/{id:long}")]
         public ActionResult<PagedResult<FollowerResponseWithUserDto>> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
@@ -54,8 +54,9 @@ namespace Explorer.API.Controllers
                 "http://host.docker.internal:8089/user-followings/" + id);
             return followings.ToList();
         }
-
+        */
         //[HttpGet("user-followers/{id}")]
+        /*
         public async Task<ActionResult<List<FollowingResponseDto>>> GetUserFollowers(string id)
         {
             var followers = await _sharedClient.GetFromJsonAsync<FollowingResponseDto[]>(
@@ -71,7 +72,7 @@ namespace Explorer.API.Controllers
             return followers.ToList();
         }
 
-
+        *//*
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
         {
@@ -142,6 +143,7 @@ namespace Explorer.API.Controllers
             var res = await response.Content.ReadFromJsonAsync<FollowerResponseDto>();
             return res;
         }
+        */
     }
 
 }

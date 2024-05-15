@@ -25,7 +25,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         }
 
         private static readonly HttpClient _sharedClient = new();
-
+        /*
         [Authorize(Roles = "author")]
         [HttpGet]
         public ActionResult<PagedResult<TourResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
@@ -49,7 +49,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
             //var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
-            //return CreateResponse(result);*/
+            //return CreateResponse(result);
             //var tours = await GetAuthorsToursGo(_sharedClient, id);
             //return tours;
             var httpResponse = await _sharedClient.GetAsync("http://host.docker.internal:8083/tours/" + id);
@@ -70,7 +70,8 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 return resp;
             }
         }
-/*
+*/
+    /*
         [Authorize(Roles = "author, tourist")]
         [HttpPost]
         public async Task<ActionResult<TourResponseDto>> Create([FromBody] TourCreateDto tour)
