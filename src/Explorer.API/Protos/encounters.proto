@@ -14,22 +14,9 @@ service Encounters {
 
   rpc GetAllEncounters(Empty) returns (ListEncounterResponse) {
     option (google.api.http) = {
-      post: "/api/tourist/encountertours/in-range-of"
-      body: "position"
+      get: "/api/tourist/encountertours/in-range-of"
     };
   }
-}
-
-message PositionAndPages {
-    UserPosition position = 1;
-    int32 page = 2;
-    int32 pageSize = 3;
-}
-
-message UserPosition {
-    double Range = 1;
-    double Longitude = 2;
-    double Latitude = 3;
 }
 
 message Empty {}

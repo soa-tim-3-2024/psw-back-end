@@ -28,7 +28,6 @@ namespace Explorer.API.Controllers.Proto
             return await Task.FromResult(new SocialEncounterResponse(response));
         }
 
-        [Authorize(Policy = "touristPolicy")]
         public override async Task<ListEncounterResponse> GetAllEncounters(Empty request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
