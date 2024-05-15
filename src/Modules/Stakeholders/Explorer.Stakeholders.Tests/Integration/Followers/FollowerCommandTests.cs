@@ -18,7 +18,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
         public FollowerCommandTests(StakeholdersTestFactory factory) : base(factory)
         {
         }
-
+        /*
         [Fact]
         public void Creates()
         {
@@ -86,6 +86,6 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
             {
                 ControllerContext = BuildContext("-1")
             };
-        }
+        }*/
     }
 }

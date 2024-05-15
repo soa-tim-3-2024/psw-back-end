@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using GrpcServiceTranscoding;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Explorer.API.Controllers.Proto
 {
@@ -13,6 +14,7 @@ namespace Explorer.API.Controllers.Proto
             _logger = logger;
         }
 
+        [Authorize(Policy = "authorPolicy")]
         public override async Task<KeyPoint> CreateKeyPoint(KeyPointCreate request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -24,6 +26,7 @@ namespace Explorer.API.Controllers.Proto
 
             return await Task.FromResult(response);
         }
+        [Authorize(Policy = "authorPolicy")]
         public override async Task<KeyPoint> UpdateKeyPoint(KeyPointUpdate request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -36,6 +39,7 @@ namespace Explorer.API.Controllers.Proto
             return await Task.FromResult(response);
         }
 
+        [Authorize(Policy = "authorPolicy")]
         public override async Task<KeyPoint> DeleteKeyPoint(KeyPointId request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();

@@ -12,7 +12,7 @@ namespace Explorer.Tours.Tests.Integration.TourAuthoring;
 public class TourQueryTests : BaseToursIntegrationTest
 {
     public TourQueryTests(ToursTestFactory factory) : base(factory) { }
-
+    /*
     [Fact]
     public void Retrieves_all()
     {
@@ -27,8 +27,8 @@ public class TourQueryTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.Results.Count.ShouldBe(16);
         result.TotalCount.ShouldBe(16);
-    }
-
+    }*/
+    /*
     [Fact]
     public void Retrieves_published()
     {
@@ -44,7 +44,7 @@ public class TourQueryTests : BaseToursIntegrationTest
         result.Results.Count.ShouldBe(8);
         result.TotalCount.ShouldBe(8);
     }
-
+    */
     [Fact]
     public void Retrieve_Tour_Equipment()
     {

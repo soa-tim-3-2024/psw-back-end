@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using GrpcServiceTranscoding;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Explorer.API.Controllers.Proto
 {
@@ -12,6 +13,7 @@ namespace Explorer.API.Controllers.Proto
         {
             _logger = logger;
         }
+        [Authorize(Policy = "authorPolicy")]
 
         public override async Task<TourResponseAuthor> AddTour(TourCreate request, ServerCallContext context)
         {
@@ -41,6 +43,7 @@ namespace Explorer.API.Controllers.Proto
             });
         }
 
+        [Authorize(Policy = "authorPolicy")]
         public override async Task<TourResponseAuthor> UpdateTour(TourUpdate request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -69,6 +72,7 @@ namespace Explorer.API.Controllers.Proto
             });
         }
 
+        [Authorize(Policy = "authorPolicy")]
         public override async Task<publishResponse> PublishTour(TourUpdate request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -80,6 +84,7 @@ namespace Explorer.API.Controllers.Proto
 
             return await Task.FromResult(response);
         }
+        [Authorize(Policy = "authorPolicy")]
         public override async Task<publishResponse> ArchiveTour(TourUpdate request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();

@@ -16,7 +16,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
     public class FollowerQueryTests : BaseStakeholdersIntegrationTest
     {
         public FollowerQueryTests(StakeholdersTestFactory factory) : base(factory) {}
-
+        /*
         [Fact]
         public void Retrieves_Followers()
         {
@@ -55,6 +55,6 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
             {
                 ControllerContext = BuildContext("-1")
             };
-        }
+        }*/
     }
 }

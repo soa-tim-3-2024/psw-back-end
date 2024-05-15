@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using GrpcServiceTranscodingFol;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Explorer.API.Controllers.Proto
 {
@@ -13,9 +14,10 @@ namespace Explorer.API.Controllers.Proto
             _logger = logger;
         }
 
-
+        [Authorize(Policy = "nonAdministratorPolicy")]
         public override async Task<ListFollowingResponse> GetUserFollowings(Identificator request, ServerCallContext context)
         {
+
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
             var channel = GrpcChannel.ForAddress("http://host.docker.internal:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
@@ -26,6 +28,7 @@ namespace Explorer.API.Controllers.Proto
             return await Task.FromResult(new ListFollowingResponse(response));
         }
 
+        [Authorize(Policy = "nonAdministratorPolicy")]
         public override async Task<ListFollowingResponse> GetUserFollowers(Identificator request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -38,6 +41,7 @@ namespace Explorer.API.Controllers.Proto
             return await Task.FromResult(new ListFollowingResponse(response));
         }
 
+        [Authorize(Policy = "nonAdministratorPolicy")]
         public override async Task<ListFollowingResponse> GetUserRecommendations(Identificator request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -50,6 +54,7 @@ namespace Explorer.API.Controllers.Proto
             return await Task.FromResult(new ListFollowingResponse(response));
         }
 
+        [Authorize(Policy = "nonAdministratorPolicy")]
         public override async Task<FollowerResponse> CreateNewFollowing(FollowingCreateRequest request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -62,6 +67,7 @@ namespace Explorer.API.Controllers.Proto
             return await Task.FromResult(new FollowerResponse(response));
         }
 
+        [Authorize(Policy = "nonAdministratorPolicy")]
         public override async Task<FollowerResponse> UnfollowUser(UserUnfollowRequest request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();

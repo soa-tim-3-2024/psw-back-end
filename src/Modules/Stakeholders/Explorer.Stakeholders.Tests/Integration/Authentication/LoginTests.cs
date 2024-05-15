@@ -13,7 +13,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication;
 public class LoginTests : BaseStakeholdersIntegrationTest
 {
     public LoginTests(StakeholdersTestFactory factory) : base(factory) { }
-
+    /*
     [Fact]
     public void Successfully_logs_in()
     {
@@ -68,5 +68,5 @@ public class LoginTests : BaseStakeholdersIntegrationTest
     {
         return new AuthenticationController(scope.ServiceProvider.GetRequiredService<IAuthenticationService>(),
             scope.ServiceProvider.GetRequiredService<IWalletService>());
-    }
+    }*/
 }

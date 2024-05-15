@@ -1,9 +1,11 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using GrpcServiceTranscoding;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Explorer.API.Controllers.Proto
 {
+
     public class ToursProtoController : MarketplaceTour.MarketplaceTourBase
     {
         private readonly ILogger<ToursProtoController> _logger;
@@ -13,6 +15,7 @@ namespace Explorer.API.Controllers.Proto
             _logger = logger;
         }
 
+        [Authorize(Policy = "touristPolicy")]
         public override async Task<TourResponseList> GetPublishedTours(Page request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -25,6 +28,7 @@ namespace Explorer.API.Controllers.Proto
             return await Task.FromResult(response);
         }
 
+        [Authorize(Policy = "authorPolicy")]
         public override async Task<TourResponseList> GetAuthorTours(AuthorId request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
