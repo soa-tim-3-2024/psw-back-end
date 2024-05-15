@@ -20,7 +20,7 @@ namespace Explorer.API.Controllers.Proto
 
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            var channel = GrpcChannel.ForAddress("http://host.docker.internal:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
+            var channel = GrpcChannel.ForAddress("http://localhost:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
 
             var client = new Followers.FollowersClient(channel);
             var response = await client.GetUserFollowingsAsync(request);
@@ -33,7 +33,7 @@ namespace Explorer.API.Controllers.Proto
         {
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            var channel = GrpcChannel.ForAddress("http://host.docker.internal:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
+            var channel = GrpcChannel.ForAddress("http://localhost:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
 
             var client = new Followers.FollowersClient(channel);
             var response = await client.GetUserFollowersAsync(request);
@@ -46,7 +46,7 @@ namespace Explorer.API.Controllers.Proto
         {
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            var channel = GrpcChannel.ForAddress("http://host.docker.internal:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
+            var channel = GrpcChannel.ForAddress("http://localhost:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
 
             var client = new Followers.FollowersClient(channel);
             var response = await client.GetUserRecommendationsAsync(request);
@@ -59,7 +59,7 @@ namespace Explorer.API.Controllers.Proto
         {
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            var channel = GrpcChannel.ForAddress("http://host.docker.internal:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
+            var channel = GrpcChannel.ForAddress("http://localhost:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
 
             var client = new Followers.FollowersClient(channel);
             var response = await client.CreateNewFollowingAsync(request);
@@ -72,7 +72,7 @@ namespace Explorer.API.Controllers.Proto
         {
             var httpHandler = new HttpClientHandler();
             httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            var channel = GrpcChannel.ForAddress("http://host.docker.internal:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
+            var channel = GrpcChannel.ForAddress("http://localhost:8089", new GrpcChannelOptions { HttpHandler = httpHandler });
 
             var client = new Followers.FollowersClient(channel);
             var response = await client.UnfollowUserAsync(request);

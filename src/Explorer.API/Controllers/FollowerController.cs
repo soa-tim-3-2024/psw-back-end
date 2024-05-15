@@ -1,6 +1,9 @@
-﻿using Explorer.Stakeholders.API.Public;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers
 {
@@ -139,6 +142,18 @@ namespace Explorer.API.Controllers
             return res;
         }
         */
+        [HttpGet("search/{searchUsername}")]
+        public ActionResult<PagedResult<UserResponseDto>> GetSearch([FromQuery] int page, [FromQuery] int pageSize, string searchUsername)
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _userService.SearchUsers(0, 0, searchUsername, userId);
+            return CreateResponse(result);
+        }
     }
 
 }
