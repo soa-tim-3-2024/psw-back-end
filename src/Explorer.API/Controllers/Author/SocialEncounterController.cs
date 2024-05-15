@@ -21,7 +21,7 @@ public class SocialEncounterController : BaseApiController
     }
 
 
-    [HttpPost("create")]
+    //[HttpPost("create")]
     public async Task<ActionResult<SocialEncounterCreateDto>> CreateSocialEncounter([FromBody] SocialEncounterCreateDto socialEncounter)
     {
         var client = _factory.CreateClient();

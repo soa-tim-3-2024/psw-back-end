@@ -54,6 +54,7 @@
 		<Protobuf Include="Protos\keyPoint.proto" />
 		<Protobuf Include="Protos\follower.proto" />
 		<Protobuf Include="Protos\authentication.proto" />
+		<Protobuf Include="Protos\encounters.proto" />
 	</ItemGroup>
 
 	

@@ -40,6 +40,7 @@ app.MapGrpcService<TourAuthoringProtoController>();
 app.MapGrpcService<KeyPointProtoController>();
 app.MapGrpcService<FollowerProtoController>();
 app.MapGrpcService<AuthenticationProtoController>();
+app.MapGrpcService<EncounterProtoController>();
 
 app.Run();
 
