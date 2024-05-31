@@ -52,5 +52,17 @@ namespace Explorer.API.Controllers.Proto
 
             return await Task.FromResult(response);
         }
+
+        public override async Task<TourResponse> DeleteTour(TourId request, ServerCallContext context)
+        {
+            var httpHandler = new HttpClientHandler();
+            httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+            var channel = GrpcChannel.ForAddress("http://localhost:8083", new GrpcChannelOptions { HttpHandler = httpHandler });
+
+            var client = new MarketplaceTour.MarketplaceTourClient(channel);
+            var response = await client.DeleteTourAsync(request);
+
+            return await Task.FromResult(response);
+        }
     }
 }

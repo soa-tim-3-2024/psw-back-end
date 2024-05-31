@@ -21,6 +21,11 @@ service MarketplaceTour {
       get: "/api/market-place/tours/{tourId}"
     };
   }
+  rpc DeleteTour (TourId) returns (TourResponse) {
+    option (google.api.http) = {
+      delete: "/api/market-place/tours/{tourId}"
+    };
+  }
 }
 
 message Page {

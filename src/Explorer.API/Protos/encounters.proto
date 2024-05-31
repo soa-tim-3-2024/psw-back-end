@@ -12,6 +12,13 @@ service Encounters {
     };
   }
 
+  rpc CreateTourEncounter(TourEncounterCreate) returns (TourEncounterCreate) {
+    option (google.api.http) = {
+      post: "/api/author/tour-encounter/create"
+      body: "*"
+    };
+  }
+
   rpc GetAllEncounters(Empty) returns (ListEncounterResponse) {
     option (google.api.http) = {
       get: "/api/tourist/encountertours/in-range-of"
@@ -35,7 +42,24 @@ message SocialEncounterCreate {
         Archived = 2;
     }
     EncounterStatus status = 8;
-    int32 peopleNumber = 9;
+    int32 tourId = 9;
+}
+
+message TourEncounterCreate {
+    string title = 1;
+    string description = 2;
+    string picture = 3;
+    double longitude = 4;
+    double latitude = 5;
+    double radius = 6;
+    int32 xpReward = 7;
+    enum EncounterStatus { 
+        Active = 0;
+        Draft = 1;
+        Archived = 2;
+    }
+    EncounterStatus status = 8;
+    int32 tourId = 9;
 }
 
 message SocialEncounterResponse {
@@ -52,7 +76,7 @@ message SocialEncounterResponse {
         Archived = 2;
     }
     EncounterStatus status = 8;
-    int32 peopleNumber = 9;
+    int32 tourId = 9;
 }
 
 message EncounterResponse {

@@ -15,7 +15,7 @@ namespace Explorer.API.Controllers.Proto
             _logger = logger;
         }
 
-        [Authorize(Policy = "authorPolicy")]
+       // [Authorize(Policy = "authorPolicy")]
         public override async Task<SocialEncounterResponse> CreateSocialEncounter(SocialEncounterCreate request, ServerCallContext context)
         {
             var httpHandler = new HttpClientHandler();
@@ -26,6 +26,18 @@ namespace Explorer.API.Controllers.Proto
             var response = await client.CreateSocialEncounterAsync(request);
 
             return await Task.FromResult(new SocialEncounterResponse(response));
+        }
+
+        public override async Task<TourEncounterCreate> CreateTourEncounter(TourEncounterCreate request, ServerCallContext context)
+        {
+            var httpHandler = new HttpClientHandler();
+            httpHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+            var channel = GrpcChannel.ForAddress("http://localhost:8082", new GrpcChannelOptions { HttpHandler = httpHandler });
+
+            var client = new GrpcServiceTranscoding.Encounters.EncountersClient(channel);
+            var response = await client.CreateTourEncounterAsync(request);
+
+            return await Task.FromResult(new TourEncounterCreate(response));
         }
 
         public override async Task<ListEncounterResponse> GetAllEncounters(Empty request, ServerCallContext context)
