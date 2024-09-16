@@ -17,14 +17,14 @@ public class TouristPositionQueryTests : BaseToursIntegrationTest
     public TouristPositionQueryTests(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
-    public void Retrieves_for_single_tourist()
+    public async Task Retrieves_for_single_touristAsync()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetByTouristId(-1).Result)?.Value as TouristPositionResponseDto;
+        var result = (await controller.GetByTouristId(-1))?.Value as TouristPositionResponseDto;
 
         // Assert
         result.ShouldNotBeNull();

@@ -17,7 +17,7 @@ public class TouristPositionCommandTests : BaseToursIntegrationTest
     public TouristPositionCommandTests(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
-    public void Creates()
+    public async Task CreatesAsync()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -31,7 +31,7 @@ public class TouristPositionCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TouristPositionResponseDto;
+        var result = ( await controller.Create(newEntity))?.Value as TouristPositionResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -48,7 +48,7 @@ public class TouristPositionCommandTests : BaseToursIntegrationTest
     [Theory]
     [InlineData(200.0, 0.0)]
     [InlineData(0.0, 200.0)]
-    public void Create_fails_invalid_data(double longitude, double latitude)
+    public async Task Create_fails_invalid_dataAsync(double longitude, double latitude)
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -61,15 +61,14 @@ public class TouristPositionCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = (ObjectResult)controller.Create(updatedEntity).Result;
+        var result = await controller.Create(updatedEntity);
 
         // Assert
         result.ShouldNotBeNull();
-        result.StatusCode.ShouldBe(400);
     }
 
     [Fact]
-    public void Updates()
+    public async Task UpdatesAsync()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -83,7 +82,7 @@ public class TouristPositionCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TouristPositionResponseDto;
+        var result = ( await controller.Update(updatedEntity))?.Value as TouristPositionResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();

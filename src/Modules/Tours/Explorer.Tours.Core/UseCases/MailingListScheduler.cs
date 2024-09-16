@@ -9,7 +9,7 @@ using System;
 
 namespace Explorer.Tours.Core.UseCases;
 
-public class MailingListScheduler : BackgroundService, IMailingListScheduler
+public class MailingListScheduler
 {
 
     private readonly IServiceProvider _serviceProvider;
@@ -71,7 +71,7 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
         _logger.LogInformation("Daily digest sent.");
         */
     }
-
+    /*
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
@@ -152,11 +152,10 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
 
             await Task.Delay(-1, stoppingToken);
 
-         
-
         }
 
     }
+    */
 
     private List<string> getEmailsOneDay()
     {

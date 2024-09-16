@@ -1,4 +1,6 @@
-﻿namespace Explorer.Stakeholders.API.Dtos
+﻿using FluentResults;
+
+namespace Explorer.Stakeholders.API.Dtos
 {
     public class UserResponseDto
     {
@@ -8,5 +10,10 @@
         public int Role { get; set; }
         public bool IsActive { get; set; }
         public ICollection<FollowerCreateDto> Followers { get; set; }
+
+        public static implicit operator UserResponseDto(Result<UserResponseDto> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

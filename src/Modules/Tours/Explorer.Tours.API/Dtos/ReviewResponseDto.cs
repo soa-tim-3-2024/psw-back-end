@@ -7,6 +7,7 @@ namespace Explorer.Tours.API.Dtos
         public int Id { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }
+        public string Username { get; set; }
         public long TouristId { get; set; }
         public DateOnly TourVisitDate { get; set; }
         public DateOnly CommentDate { get; set; }

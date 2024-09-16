@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System.Xml.Linq;
 
 namespace Explorer.Stakeholders.Core.Domain;
 
